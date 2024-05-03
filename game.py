@@ -24,7 +24,7 @@ class Game():
         self.makeEnemies()
         self.gameOver = False
         self.startGame = False
-        self.round = 4
+        self.round = 1
         
         self.isBossRound = False
         self.Boss = None
