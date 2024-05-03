@@ -2,8 +2,8 @@ import pygame
 from game import *
 
 BLACK = (0,0,0)
-WIDTH = 600
-HEIGHT = 850
+WIDTH = 600.0
+HEIGHT = 850.0
 
 def main():
     pygame.init()

@@ -2,14 +2,14 @@ import pygame
 from bullet import *
 
 class Enemy():
-    def __init__(self,xPos,yPos,rad,hasCoin):
+    def __init__(self,xPos:float,yPos:float,rad:int,hasCoin:bool):
         self.x = xPos
         self.y = yPos
         self.rad = rad
         self.speed = 5
         self.hasCoin = hasCoin
         
-    def drawEnemy(self,screen) -> None:
+    def drawEnemy(self,screen:pygame.Surface) -> None:
         pygame.draw.circle(screen,(255,0,0),(self.x,self.y),self.rad,0)
         
     def moveEnemy(self) -> None:
@@ -36,16 +36,16 @@ class Enemy():
         return self.y
     
 class Boss(Enemy):
-    def __init__(self,xPos,yPos,rad):
+    def __init__(self,xPos:float,yPos:float,rad:int):
         super().__init__(xPos,yPos,rad,True)
         self.health = 30
         self.color = (255,0,0)
         self.minionList = []
         
-    def drawEnemy(self,screen) -> None:
+    def drawEnemy(self,screen: pygame.Surface) -> None:
         pygame.draw.circle(screen,self.color,(self.x,self.y),self.rad,0)
         
-    def makeMinions(self,screen) -> None:
+    def makeMinions(self,screen: pygame.Surface) -> None:
         for i in range(1,6):
             self.minionList.append(Minion(100 * i + 1,175,15))
         
@@ -62,7 +62,7 @@ class Boss(Enemy):
             self.color = (0,0,255)
             
 class Minion(Boss): #Boss Minion, They can't move
-    def __init__(self,xPos,yPos,rad):
+    def __init__(self,xPos: float,yPos: float,rad: int):
         super().__init__(xPos,yPos,rad)
         self.health = 3
         

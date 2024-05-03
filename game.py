@@ -8,7 +8,7 @@ from bullet import *
 from enemy import *
 
 class Game():
-    def __init__(self,screen,center,height):
+    def __init__(self,screen:pygame.Surface,center:float,height:float):
         self.SCREENCENTER = center
         self.win = screen
         self.player = Player(center,height - 75,25) #Sets the player to spawn in the center of the screen towards the bottom
@@ -39,7 +39,7 @@ class Game():
             font = pygame.freetype.SysFont("Comic Sans MS",32)
             font.render_to(self.win,(150,47),"Boss Health: " + str(self.Boss.health) + "/30",(255,0,0))
         
-    def addScore(self,scoreAmt) -> None: #Adds points to the player's score
+    def addScore(self,scoreAmt:int) -> None: #Adds points to the player's score
         self.score += scoreAmt * self.player.getScoreMultiplyer()
 
     def handleInput(self) -> None: #Self Explanatory
@@ -56,7 +56,7 @@ class Game():
             self.bullets.append(bulletAdd)
             self.shootState = False
 
-    def changeShootState(self,state) -> None: #Player can't hold to shoot, have to hit the fire button every time
+    def changeShootState(self,state:bool) -> None: #Player can't hold to shoot, have to hit the fire button every time
         self.shootState = state
         
     def makeEnemies(self) -> None: #Filles the enemy array
@@ -126,7 +126,7 @@ class Game():
         self.renderCenterText("Intergalatic",(0,255,255))
         self.renderCenterText("Click to Start!",(255,255,255),50)
     
-    def renderCenterText(self,text,rgb,offset = 0) -> None:
+    def renderCenterText(self,text:str,rgb:(),offset:int = 0) -> None:
         font = pygame.freetype.SysFont("Comic Sans MS",28)
         fontWidth = font.get_rect(text)
         font.render_to(self.win,(self.center - fontWidth.width / 2,(self.height / 3) + offset),text,rgb)

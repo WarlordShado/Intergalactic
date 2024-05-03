@@ -3,7 +3,7 @@ from bullet import *
 
 class Player():
     
-    def __init__(self,xpos,ypos,rad):
+    def __init__(self,xpos:float,ypos:float,rad:int):
         self.x = xpos
         self.y = ypos
         self.rad = rad
@@ -12,7 +12,7 @@ class Player():
         self.health = 5
         self.totalBossTokens = 0
         
-    def movePlayer(self,amt) -> None:
+    def movePlayer(self,amt:int) -> None:
         if self.x + amt < self.rad:
             self.x -= amt
         elif self.x + amt > 600 - self.rad:
@@ -26,7 +26,7 @@ class Player():
     def getScoreMultiplyer(self) -> None:
         return (self.totalBossTokens * 0.1) + 1
 
-    def drawPlayer(self,screen) -> None:
+    def drawPlayer(self,screen:pygame.Surface) -> None:
         match(self.health):
             case 5:
                 self.playerColor = (0,0,255)

@@ -1,7 +1,7 @@
 import pygame
 
 class Bullet():
-    def __init__(self,xpos,ypos,rad,velocity):
+    def __init__(self,xpos:float,ypos:float,rad:int,velocity:int):
         self.x = xpos
         self.y = ypos
         self.rad = rad
@@ -11,7 +11,7 @@ class Bullet():
     def moveBullet(self) -> None:
         self.y -= self.velocity
         
-    def drawBullet(self,screen) -> None:
+    def drawBullet(self,screen:pygame.Surface) -> None:
         if self.velocity < 1:
             self.bulletColor = (255,0,129)
 
