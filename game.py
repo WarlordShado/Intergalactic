@@ -1,4 +1,3 @@
-import enum
 import math
 import pygame
 import pygame.freetype
@@ -12,7 +11,7 @@ class Game():
     def __init__(self,screen,center,height):
         self.SCREENCENTER = center
         self.win = screen
-        self.player = Player(center,height - 75,25)
+        self.player = Player(center,height - 75,25) #Sets the player to spawn in the center of the screen towards the bottom
         self.height = height
         self.center = center
         self.bullets = []
@@ -40,10 +39,10 @@ class Game():
             font = pygame.freetype.SysFont("Comic Sans MS",32)
             font.render_to(self.win,(150,47),"Boss Health: " + str(self.Boss.health) + "/30",(255,0,0))
         
-    def addScore(self,scoreAmt) -> None:
+    def addScore(self,scoreAmt) -> None: #Adds points to the player's score
         self.score += scoreAmt * self.player.getScoreMultiplyer()
 
-    def handleInput(self) -> None:
+    def handleInput(self) -> None: #Self Explanatory
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_LEFT]:
@@ -57,10 +56,10 @@ class Game():
             self.bullets.append(bulletAdd)
             self.shootState = False
 
-    def changeShootState(self,state) -> None:
+    def changeShootState(self,state) -> None: #Player can't hold to shoot, have to hit the fire button every time
         self.shootState = state
         
-    def makeEnemies(self) -> None:
+    def makeEnemies(self) -> None: #Filles the enemy array
         ENEMYSPACING = 100
         startX = self.SCREENCENTER - ENEMYSPACING * 2
         startY = ENEMYSPACING
@@ -84,12 +83,12 @@ class Game():
         self.Boss.makeMinions(self.win)
                 
     def moveEnemies(self) -> None:
-        if not self.isBossRound:
+        if not self.isBossRound: 
             for enemy in (self.enemies):
                 enemy.moveEnemy()
                 rnd = random.randint(1,10)
                 if rnd == 5 :
-                    enemy.reverseSpeed()
+                    enemy.reverseSpeed() #Makes the enemy switch directions
         else:
             self.Boss.moveEnemy()
             rnd = random.randint(1,10)
@@ -100,12 +99,12 @@ class Game():
     def enemyShoot(self) -> None:
         if not self.isBossRound:
             for enemy in (self.enemies):
-                rnd = random.randint(0,200)
-                if rnd == 10:
+                rnd = random.randint(0,200) 
+                if rnd == 10: #Random chance for the enemies to shoot
                     bulletAdd = enemy.shoot()
                     self.enemiesBullets.append(bulletAdd)
         else:
-            rnd = random.randint(0,20)
+            rnd = random.randint(0,20) #Bosses have a very high change to shoot
             if rnd == 10:
                 bulletAdd = self.Boss.shoot()
                 self.enemiesBullets.append(bulletAdd) 
@@ -136,7 +135,7 @@ class Game():
         for bulletIndex,bullet in enumerate(self.bullets): #Iterates through all of the projectiles
             bullet.moveBullet()
             
-            if not self.isBossRound:
+            if not self.isBossRound: #If it isnt a boss round, check if bullets hit the enemies
                 for enemyIndex,target in enumerate(self.enemies): #Iterates through all enemies to see if a projectile hit it
                     if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
                         if self.enemies[enemyIndex].hasCoin:
@@ -147,20 +146,20 @@ class Game():
                         
                         self.addScore(100)
             else:
-                if len(self.Boss.minionList) == 0:
+                if len(self.Boss.minionList) == 0: #Boss can't be hurt untile all minions are gone
 
                     if self.checkCollisonCircle([self.Boss.getX(),self.Boss.getY()],[bullet.getX(),bullet.getY()],self.Boss.getRad(),bullet.getRad()):
-                        self.Boss.health -= 1 #subtracts Boss Health
+                        self.Boss.health -= 1
 
-                        if self.Boss.health <= 0:
+                        if self.Boss.health <= 0: #Means the boss died
                             self.addScore(1500)
-                            self.coins.append(BossToken(500,(255,165,0),self.Boss.getX(),self.Boss.getY(),15))
-                            self.Boss = None
+                            self.coins.append(BossToken(500,(255,165,0),self.Boss.getX(),self.Boss.getY(),15)) #Adds a boss token to the coin list
+                            self.Boss = None 
                             self.isBossRound = False
-                        del self.bullets[bulletIndex] #Deletes the Bullet
+                        del self.bullets[bulletIndex] #Deletes the Bullet if it collided with something
                         
                 else:
-                    for index,item in enumerate(self.Boss.minionList):
+                    for index,item in enumerate(self.Boss.minionList): #If it is a boss round, the boss minions need to be checked
                         if self.checkCollisonCircle([item.getX(),item.getY()],[bullet.getX(),bullet.getY()],item.getRad(),bullet.getRad()):
                             item.health -= 1
                             if item.health <= 0:
@@ -168,7 +167,7 @@ class Game():
                             del self.bullets[bulletIndex]
 
             if bullet.getY() <= 0:
-                del self.bullets[bulletIndex]
+                del self.bullets[bulletIndex] #Removes a bullet if it gets off screen
             else:
                 bullet.drawBullet(self.win)
 
@@ -198,15 +197,18 @@ class Game():
                 
                 coin.drawCoin(self.win)
             
-    def needMoreEnemy(self) -> bool:
+    def needMoreEnemy(self) -> bool: #checks if all of the enemies are gone
         if len(self.enemies) <= 0 or self.isBossRound and self.Boss == None:
             return True
         return False
 
-    def draw(self) -> None: #also functions as the update method
+    def update(self) -> None:
         self.moveBullets()
         self.moveEnemyBullets()
         self.moveCoin()
+
+    def draw(self) -> None:
+        self.update()
                 
         if not self.gameOver:
             if self.needMoreEnemy(): #Checks if more enemies need to be put on screen
