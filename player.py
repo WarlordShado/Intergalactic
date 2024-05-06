@@ -1,6 +1,7 @@
 import pygame
 from bullet import *
 from gear import *
+from sprite import *
 
 class Player():
     
@@ -9,10 +10,11 @@ class Player():
         self.y = ypos
         self.rad = rad
         self.fireRate = 0
-        self.playerColor = (0,0,255)
+        self.playerColor = (0,0,0)
         self.health = 5
         self.totalBossTokens = 0
         self.gear = MachineGun()
+        self.playerSprite = Sprite("sprites\PlayerShip.png",50,50)
         
     def movePlayer(self,amt:int) -> None:
         if self.x + amt < self.rad:
@@ -29,19 +31,9 @@ class Player():
         return (self.totalBossTokens * 0.1) + 1
 
     def drawPlayer(self,screen:pygame.Surface) -> None:
-        match(self.health):
-            case 5:
-                self.playerColor = (0,0,255)
-            case 4:
-                self.playerColor = (127,0,255)
-            case 3:
-                self.playerColor = (127,0,127)
-            case 2:
-                self.playerColor = (255,0,127)
-            case 1:
-                self.playerColor = (255,0,0)
-
         pygame.draw.circle(screen,self.playerColor,(self.x,self.y),self.rad,0)
+        self.playerSprite.getImage(screen,(self.x - self.rad,self.y-self.rad))
+        
        
     def getRad(self) -> float:
         return self.rad

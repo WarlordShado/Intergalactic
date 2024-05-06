@@ -23,7 +23,6 @@ class Game():
         self.coins = []
         self.shootState = True
         self.score = 0
-        self.makeEnemies()
         self.gameOver = False
         self.startGame = False
         self.round = 1
@@ -32,13 +31,15 @@ class Game():
         self.isBossRound = False
         self.Boss = None
 
+        self.makeEnemies()
+
     def renderLables(self) -> None:
         font = pygame.freetype.SysFont("Comic Sans MS",32)
         font.render_to(self.win,(5,5),"Score: " + str(self.score),(255,255,255))
         
         font.render_to(self.win,(350,5),"Multiplyer: X" + str(self.player.getScoreMultiplyer()),(255,255,255))
         
-        font.render_to(self.win,(5,820),"Gear: " + self.player.gear.getName(),(255,255,255))
+        font.render_to(self.win,(5,820),"Health: " + str(self.player.health) + "/5",(255,255,255))
         
         if self.isBossRound:
             font = pygame.freetype.SysFont("Comic Sans MS",32)
@@ -131,7 +132,7 @@ class Game():
     def StartScreen(self) -> None:
         self.renderCenterText("Intergalatic",(0,255,255))
         self.renderCenterText("Click to Start!",(255,255,255),50)
-        self.renderCenterText("Selected Gear: " + self.player.gear.getName(),(255,255,255),15)
+        self.renderCenterText("Selected Gear: " + self.player.gear.getName(),(255,255,255),125)
         self.renderCenterText("Hit R to Change!",(255,255,255),175)
     
     def renderCenterText(self,text:str,rgb:(),offset:int = 0) -> None:
@@ -151,9 +152,6 @@ class Game():
             case 4:
                 self.player.gear = MachineGun()
                 self.gearSelectNum = 0
-                
-    
-
 
     def moveBullets(self) -> None:
         for bulletIndex,bullet in enumerate(self.bullets): #Iterates through all of the projectiles
