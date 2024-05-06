@@ -1,5 +1,6 @@
 import pygame
 from bullet import *
+from gear import *
 
 class Player():
     
@@ -11,6 +12,7 @@ class Player():
         self.playerColor = (0,0,255)
         self.health = 5
         self.totalBossTokens = 0
+        self.gear = MachineGun()
         
     def movePlayer(self,amt:int) -> None:
         if self.x + amt < self.rad:
@@ -20,8 +22,8 @@ class Player():
         else:
             self.x += amt
             
-    def shoot(self) -> Bullet:
-        return Bullet(self.x,self.y - self.rad,5,10)
+    def shoot(self) -> list: #For Gear, Return a list
+        return self.gear.getBulletList(self.x,self.y,self.rad)
             
     def getScoreMultiplyer(self) -> None:
         return (self.totalBossTokens * 0.1) + 1

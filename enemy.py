@@ -21,7 +21,7 @@ class Enemy():
             self.x += self.speed
             
     def shoot(self) -> Bullet:
-        return Bullet(self.x,self.y + self.rad,5,-10)
+        return Bullet(self.x,self.y + self.rad,5,(0,10))
 
     def reverseSpeed(self) -> None:
         self.speed *= -1

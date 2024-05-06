@@ -1,4 +1,6 @@
+from email.policy import default
 import math
+from tokenize import Double
 import pygame
 import pygame.freetype
 import random
@@ -6,6 +8,7 @@ from coin import *
 from player import *
 from bullet import *
 from enemy import *
+from gear import *
 
 class Game():
     def __init__(self,screen:pygame.Surface,center:float,height:float):
@@ -24,6 +27,7 @@ class Game():
         self.gameOver = False
         self.startGame = False
         self.round = 1
+        self.gearSelectNum = 1
         
         self.isBossRound = False
         self.Boss = None
@@ -32,8 +36,9 @@ class Game():
         font = pygame.freetype.SysFont("Comic Sans MS",32)
         font.render_to(self.win,(5,5),"Score: " + str(self.score),(255,255,255))
         
-        font = pygame.freetype.SysFont("Comic Sans MS",32)
         font.render_to(self.win,(350,5),"Multiplyer: X" + str(self.player.getScoreMultiplyer()),(255,255,255))
+        
+        font.render_to(self.win,(5,820),"Gear: " + self.player.gear.getName(),(255,255,255))
         
         if self.isBossRound:
             font = pygame.freetype.SysFont("Comic Sans MS",32)
@@ -53,7 +58,8 @@ class Game():
             
         if keys[pygame.K_UP] and self.shootState: 
             bulletAdd = self.player.shoot()
-            self.bullets.append(bulletAdd)
+            for bullet in bulletAdd:
+                self.bullets.append(bullet)
             self.shootState = False
 
     def changeShootState(self,state:bool) -> None: #Player can't hold to shoot, have to hit the fire button every time
@@ -125,11 +131,29 @@ class Game():
     def StartScreen(self) -> None:
         self.renderCenterText("Intergalatic",(0,255,255))
         self.renderCenterText("Click to Start!",(255,255,255),50)
+        self.renderCenterText("Selected Gear: " + self.player.gear.getName(),(255,255,255),15)
+        self.renderCenterText("Hit R to Change!",(255,255,255),175)
     
     def renderCenterText(self,text:str,rgb:(),offset:int = 0) -> None:
         font = pygame.freetype.SysFont("Comic Sans MS",28)
         fontWidth = font.get_rect(text)
         font.render_to(self.win,(self.center - fontWidth.width / 2,(self.height / 3) + offset),text,rgb)
+
+    def gearSelect(self):
+        self.gearSelectNum += 1
+        match self.gearSelectNum:
+            case 1:
+                self.player.gear = Gear()
+            case 2:
+                self.player.gear = DoubleShot()
+            case 3:
+                self.player.gear = TripleShot()
+            case 4:
+                self.player.gear = MachineGun()
+                self.gearSelectNum = 0
+                
+    
+
 
     def moveBullets(self) -> None:
         for bulletIndex,bullet in enumerate(self.bullets): #Iterates through all of the projectiles
