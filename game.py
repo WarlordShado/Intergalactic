@@ -25,7 +25,7 @@ class Game():
         self.score = 0
         self.gameOver = False
         self.startGame = False
-        self.round = 1
+        self.round = 4
         self.gearSelectNum = 1
         
         self.isBossRound = False
@@ -161,7 +161,7 @@ class Game():
                 for enemyIndex,target in enumerate(self.enemies): #Iterates through all enemies to see if a projectile hit it
                     if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
                         if self.enemies[enemyIndex].hasCoin:
-                            self.coins.append(Coin(100,(255,255,0),self.enemies[enemyIndex].getX(),self.enemies[enemyIndex].getY(),5))
+                            self.coins.append(Coin(100,self.enemies[enemyIndex].getX(),self.enemies[enemyIndex].getY(),5))
 
                         del self.enemies[enemyIndex] #Deletes the Enemy
                         del self.bullets[bulletIndex] #Deletes the Bullet
@@ -175,7 +175,7 @@ class Game():
 
                         if self.Boss.health <= 0: #Means the boss died
                             self.addScore(1500)
-                            self.coins.append(BossToken(500,(255,165,0),self.Boss.getX(),self.Boss.getY(),15)) #Adds a boss token to the coin list
+                            self.coins.append(BossToken(500,self.Boss.getX(),self.Boss.getY(),15)) #Adds a boss token to the coin list
                             self.Boss = None 
                             self.isBossRound = False
                         del self.bullets[bulletIndex] #Deletes the Bullet if it collided with something
@@ -186,6 +186,7 @@ class Game():
                             item.health -= 1
                             if item.health <= 0:
                                 del self.Boss.minionList[index]
+                                self.addScore(300)
                             del self.bullets[bulletIndex]
 
             if bullet.getY() <= 0:
