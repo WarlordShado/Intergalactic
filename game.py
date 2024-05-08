@@ -1,6 +1,4 @@
-from email.policy import default
 import math
-from tokenize import Double
 import pygame
 import pygame.freetype
 import random
@@ -11,7 +9,7 @@ from enemy import *
 from gear import *
 
 class Game():
-    def __init__(self,screen:pygame.Surface,center:float,height:float):
+    def __init__(self,screen:pygame.Surface,center:float,height:float) -> None:
         self.SCREENCENTER = center
         self.win = screen
         self.player = Player(center,height - 75,25) #Sets the player to spawn in the center of the screen towards the bottom
@@ -26,7 +24,7 @@ class Game():
         self.gameOver = False
         self.startGame = False
         self.round = 4
-        self.gearSelectNum = 1
+        self.gearSelectNum = 0
         
         self.isBossRound = False
         self.Boss = None
@@ -43,7 +41,7 @@ class Game():
         
         if self.isBossRound:
             font = pygame.freetype.SysFont("Comic Sans MS",32)
-            font.render_to(self.win,(150,47),"Boss Health: " + str(self.Boss.health) + "/30",(255,0,0))
+            font.render_to(self.win,(150,47), self.Boss.getName() + " Health: " + str(self.Boss.health) + "/" + str(self.Boss.maxHp),(255,0,0))
         
     def addScore(self,scoreAmt:int) -> None: #Adds points to the player's score
         self.score += scoreAmt * self.player.getScoreMultiplyer()
@@ -58,7 +56,23 @@ class Game():
             self.player.movePlayer(5)
             
         if keys[pygame.K_UP] and self.shootState: 
-            bulletAdd = self.player.shoot()
+            bulletAdd = []
+            if type(self.player.gear) is HomingStrike:
+                if not self.isBossRound:
+                    rnd = random.randint(0,len(self.enemies) - 1)
+                    bulletAdd = self.player.shoot(self.enemies[rnd])
+                else:
+                    if type(self.Boss) is Overseer:
+                        if len(self.Boss.minionList) != 0:
+                            rnd = random.randint(0,len(self.Boss.minionList) - 1)
+                            bulletAdd = self.player.shoot(self.Boss.minionList[rnd])
+                        else:
+                            bulletAdd = self.player.shoot(self.Boss)
+                    else:
+                        bulletAdd = self.player.shoot(self.Boss)
+            else:
+                bulletAdd = self.player.shoot()
+                
             for bullet in bulletAdd:
                 self.bullets.append(bullet)
             self.shootState = False
@@ -86,8 +100,19 @@ class Game():
     def makeBoss(self) -> None:
         startX = self.SCREENCENTER
         startY = 125
-        self.Boss = Boss(startX,startY,30)
-        self.Boss.makeMinions(self.win)
+        self.Boss = self.getBoss(startX,startY,30)
+        self.Boss.startSpecial(self.win)
+        
+    def getBoss(self,x,y,rad) -> Boss:
+        rnd = random.randint(1,3)
+        #rnd = 3
+        match rnd:
+            case 1:
+                return Overseer(x,y,rad)
+            case 2:
+                return Goliath(x,y,rad)
+            #case 3:
+            #    return Rouge(x,y,rad)
                 
     def moveEnemies(self) -> None:
         if not self.isBossRound: 
@@ -101,20 +126,32 @@ class Game():
             rnd = random.randint(1,10)
             if rnd == 5 :
                 self.Boss.reverseSpeed()
-         
-                
+               
     def enemyShoot(self) -> None:
         if not self.isBossRound:
             for enemy in (self.enemies):
-                rnd = random.randint(0,200) 
+                rnd = random.randint(0,enemy.fireRate) 
                 if rnd == 10: #Random chance for the enemies to shoot
                     bulletAdd = enemy.shoot()
-                    self.enemiesBullets.append(bulletAdd)
+                    for item in bulletAdd:
+                        self.enemiesBullets.append(item) 
         else:
-            rnd = random.randint(0,20) #Bosses have a very high change to shoot
-            if rnd == 10:
+            rndSpec = random.randint(0,self.Boss.specRate) #How Often the boss will use it's special move
+            rndShoot = random.randint(0,self.Boss.fireRate) #Bosses have a very high change to shoot
+            if rndShoot == 10:
                 bulletAdd = self.Boss.shoot()
-                self.enemiesBullets.append(bulletAdd) 
+                for item in bulletAdd:
+                    self.enemiesBullets.append(item) 
+                
+            if rndSpec == 250:
+                if type(self.Boss) is Rouge:
+                    bulletAdd = self.Boss.special(self.win,self.player)
+                else:
+                    bulletAdd = self.Boss.special()
+
+                if bulletAdd is not None:
+                    for item in bulletAdd:
+                        self.enemiesBullets.append(item)
             
     def checkCollisonCircle(self,Coords1:[],Coords2:[],Rad1:int,Rad2:int) -> bool:
         #find the distance between the 2 center points of the circles
@@ -130,13 +167,13 @@ class Game():
         self.renderCenterText("Click to Restart",(255,255,255),100)
 
     def StartScreen(self) -> None:
-        self.renderCenterText("Intergalatic",(0,255,255))
-        self.renderCenterText("Click to Start!",(255,255,255),50)
+        self.renderCenterText("Intergalatic",(0,255,255),-100,64)
+        self.renderCenterText("Click to Start!",(255,255,255),35)
         self.renderCenterText("Selected Gear: " + self.player.gear.getName(),(255,255,255),125)
         self.renderCenterText("Hit R to Change!",(255,255,255),175)
     
-    def renderCenterText(self,text:str,rgb:(),offset:int = 0) -> None:
-        font = pygame.freetype.SysFont("Comic Sans MS",28)
+    def renderCenterText(self,text:str,rgb:(),offset:int = 0,fontSize: int = 28) -> None:
+        font = pygame.freetype.SysFont("Comic Sans MS",fontSize)
         fontWidth = font.get_rect(text)
         font.render_to(self.win,(self.center - fontWidth.width / 2,(self.height / 3) + offset),text,rgb)
 
@@ -151,27 +188,31 @@ class Game():
                 self.player.gear = TripleShot()
             case 4:
                 self.player.gear = MachineGun()
+            case 5:
+                self.player.gear = HomingStrike()
                 self.gearSelectNum = 0
 
     def moveBullets(self) -> None:
         for bulletIndex,bullet in enumerate(self.bullets): #Iterates through all of the projectiles
             bullet.moveBullet()
+            bullet.update()
             
             if not self.isBossRound: #If it isnt a boss round, check if bullets hit the enemies
                 for enemyIndex,target in enumerate(self.enemies): #Iterates through all enemies to see if a projectile hit it
                     if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
                         if self.enemies[enemyIndex].hasCoin:
                             self.coins.append(Coin(100,self.enemies[enemyIndex].getX(),self.enemies[enemyIndex].getY(),5))
-
+                            
                         del self.enemies[enemyIndex] #Deletes the Enemy
-                        del self.bullets[bulletIndex] #Deletes the Bullet
+                        if len(self.bullets) != 0: #bullet list is sometimes zero and breaks so this prevents it
+                            del self.bullets[bulletIndex] #Deletes the Bullet
                         
                         self.addScore(100)
             else:
-                if len(self.Boss.minionList) == 0: #Boss can't be hurt untile all minions are gone
+                if self.Boss.canBeHurt(): #Boss can't be hurt untile all minions are gone
 
                     if self.checkCollisonCircle([self.Boss.getX(),self.Boss.getY()],[bullet.getX(),bullet.getY()],self.Boss.getRad(),bullet.getRad()):
-                        self.Boss.health -= 1
+                        self.Boss.health -= self.player.gear.dmg
 
                         if self.Boss.health <= 0: #Means the boss died
                             self.addScore(1500)
@@ -179,8 +220,7 @@ class Game():
                             self.Boss = None 
                             self.isBossRound = False
                         del self.bullets[bulletIndex] #Deletes the Bullet if it collided with something
-                        
-                else:
+                elif type(self.Boss) is Overseer:
                     for index,item in enumerate(self.Boss.minionList): #If it is a boss round, the boss minions need to be checked
                         if self.checkCollisonCircle([item.getX(),item.getY()],[bullet.getX(),bullet.getY()],item.getRad(),bullet.getRad()):
                             item.health -= 1
@@ -247,9 +287,10 @@ class Game():
             if self.isBossRound: #Draws the boss if it is a boss round
                 self.Boss.changeColor()
                 self.Boss.drawEnemy(self.win)
-                for item in self.Boss.minionList:
-                    item.changeColor()
-                    item.drawEnemy(self.win)
+                if type(self.Boss) is Overseer:
+                    for item in self.Boss.minionList:
+                        item.changeColor()
+                        item.drawEnemy(self.win)
             else:
                 for index,item in enumerate(self.enemies): #Draws all of the Enemies
                     item.drawEnemy(self.win)
