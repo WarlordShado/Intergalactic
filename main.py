@@ -1,4 +1,3 @@
-from tkinter import CURRENT
 import pygame
 from game import *
 
