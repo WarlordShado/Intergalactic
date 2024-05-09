@@ -144,7 +144,7 @@ class Game():
                 
             if rndSpec == self.Boss.specRate // 2:
                 if type(self.Boss) is Rouge:
-                    bulletAdd = self.Boss.special(self.win,self.player)
+                    bulletAdd = self.Boss.special(self.win)
                 else:
                     bulletAdd = self.Boss.special()
 
@@ -280,28 +280,33 @@ class Game():
         self.moveBullets()
         self.moveEnemyBullets()
         self.moveCoin()
+        
+    def incRound(self) -> None:
+        if self.player.health < 5:
+            self.player.health += 1
+            self.round += 1
+            if self.round % 5 == 0:
+                self.isBossRound = True
+                self.makeBoss()
+            else:
+                self.makeEnemies()
+                
+    def updateBoss(self) -> None:
+        self.Boss.changeColor()
+        self.Boss.drawEnemy(self.win)
+        if type(self.Boss) is Overseer:
+            for item in self.Boss.minionList:
+                item.changeColor()
+                item.drawEnemy(self.win)       
 
     def draw(self) -> None:
         self.update()
                 
         if not self.gameOver:
             if self.needMoreEnemy(): #Checks if more enemies need to be put on screen
-                if self.player.health < 5:
-                    self.player.health += 1
-                self.round += 1
-                if self.round % 5 == 0:
-                    self.isBossRound = True
-                    self.makeBoss()
-                else:
-                    self.makeEnemies()
-                    
+                self.incRound()
             if self.isBossRound: #Draws the boss if it is a boss round
-                self.Boss.changeColor()
-                self.Boss.drawEnemy(self.win)
-                if type(self.Boss) is Overseer:
-                    for item in self.Boss.minionList:
-                        item.changeColor()
-                        item.drawEnemy(self.win)
+                self.updateBoss()
             else:
                 for index,item in enumerate(self.enemies): #Draws all of the Enemies
                     item.drawEnemy(self.win)

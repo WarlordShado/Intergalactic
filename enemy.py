@@ -122,7 +122,7 @@ class Rouge(Boss):
         self.fireRate = 20
         self.specRate = 100
         
-    def special(self, screen:pygame.Surface, player:object) -> list:
+    def special(self, screen:pygame.Surface) -> list:
         bulletAdd = [KillBullet(self.getX(),self.getY() + self.rad,25,[0,7.5])]
         return bulletAdd
             
