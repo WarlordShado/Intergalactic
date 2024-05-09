@@ -29,9 +29,17 @@ class Bullet():
 
     def getY(self) -> float:
         return self.pos.y
+
+class KillBullet(Bullet):
+    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list):
+        super().__init__(xpos,ypos,rad,velocity)
+        self.bulletColor = (255,0,0)
+        
+    def drawBullet(self,screen:pygame.Surface) -> None:
+        pygame.draw.circle(screen,self.bulletColor,(self.pos.x,self.pos.y),self.rad,0)
     
 class HomingBullet(Bullet):
-    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list,lockedEnemy):
+    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list,lockedEnemy) -> None:
         super().__init__(xpos,ypos,rad,velocity)
         self.lockedEnemy = lockedEnemy
         self.bulletColor = (0,255,255)

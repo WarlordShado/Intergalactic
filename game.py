@@ -57,7 +57,7 @@ class Game():
             
         if keys[pygame.K_UP] and self.shootState: 
             bulletAdd = []
-            if type(self.player.gear) is HomingStrike:
+            if type(self.player.gear) is HomingStrike: #Deals with creating homing bullets
                 if not self.isBossRound:
                     rnd = random.randint(0,len(self.enemies) - 1)
                     bulletAdd = self.player.shoot(self.enemies[rnd])
@@ -105,14 +105,14 @@ class Game():
         
     def getBoss(self,x,y,rad) -> Boss:
         rnd = random.randint(1,3)
-        #rnd = 3
+        rnd = 3
         match rnd:
             case 1:
                 return Overseer(x,y,rad)
             case 2:
                 return Goliath(x,y,rad)
-            #case 3:
-            #    return Rouge(x,y,rad)
+            case 3:
+                return Rouge(x,y,rad)
                 
     def moveEnemies(self) -> None:
         if not self.isBossRound: 
@@ -143,7 +143,7 @@ class Game():
                 for item in bulletAdd:
                     self.enemiesBullets.append(item) 
                 
-            if rndSpec == 250:
+            if rndSpec == self.Boss.specRate // 2:
                 if type(self.Boss) is Rouge:
                     bulletAdd = self.Boss.special(self.win,self.player)
                 else:
@@ -239,8 +239,13 @@ class Game():
             bullet.moveBullet()
                         
             if self.checkCollisonCircle([bullet.getX(),bullet.getY()],[self.player.getX(),self.player.getY()],bullet.getRad(),self.player.getRad()):
-                del self.enemiesBullets[enemyBulIndex]
-                self.player.health -= 1
+                if type(bullet) is KillBullet:
+                    del self.enemiesBullets[enemyBulIndex]
+                    self.player.health = 0
+                else:
+                    del self.enemiesBullets[enemyBulIndex]
+                    self.player.health -= 1
+                    
             if self.player.health <= 0:
                 self.gameOver = True
             else:   

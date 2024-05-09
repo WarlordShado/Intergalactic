@@ -112,7 +112,7 @@ class Overseer(Boss):
             return True
         return False
     
-class Rouge(Boss): #NOT FUNCITON YET
+class Rouge(Boss):
     def __init__(self, xPos: float, yPos: float, rad: int) -> None:
         super().__init__(xPos, yPos, rad)
         self.maxHp = 15
@@ -121,10 +121,10 @@ class Rouge(Boss): #NOT FUNCITON YET
         self.name = "Rouge"
         self.gear = DoubleShot(True)
         self.fireRate = 20
-        self.specRate = 750
+        self.specRate = 100
         
     def special(self, screen:pygame.Surface, player:object) -> list:
-        bulletAdd = [HomingBullet(self.getX(),self.getY() + self.rad,15,[0,10],player)]
+        bulletAdd = [KillBullet(self.getX(),self.getY() + self.rad,25,[0,7.5])]
         return bulletAdd
             
     
