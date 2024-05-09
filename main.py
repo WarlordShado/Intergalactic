@@ -41,8 +41,6 @@ def main() -> None:
 
         if not game.gameOver and game.startGame:
             game.handleInput()
-            game.enemyShoot()
-            game.moveEnemies()
             game.draw()
         elif not game.startGame:
             game.StartScreen()

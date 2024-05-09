@@ -275,6 +275,8 @@ class Game():
         return False
 
     def update(self) -> None:
+        self.enemyShoot()
+        self.moveEnemies()
         self.moveBullets()
         self.moveEnemyBullets()
         self.moveCoin()
