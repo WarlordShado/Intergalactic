@@ -40,10 +40,11 @@ class KillBullet(Bullet):
         pygame.draw.circle(screen,self.bulletColor,(self.pos.x,self.pos.y),self.rad,0)
     
 class HomingBullet(Bullet):
-    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list,lockedEnemy) -> None:
+    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list,lockedEnemy,agg: int = 11) -> None:
         super().__init__(xpos,ypos,rad,velocity)
         self.lockedEnemy = lockedEnemy
         self.bulletColor = (0,255,255)
+        self.aggresiveness = agg
         
     def drawBullet(self,screen:pygame.Surface) -> None:
         pygame.draw.circle(screen,self.bulletColor,(self.pos.x,self.pos.y),self.rad,0)
@@ -52,6 +53,6 @@ class HomingBullet(Bullet):
         enemyPos = pygame.Vector2([self.lockedEnemy.getX(),self.lockedEnemy.getY()])
         direction = enemyPos - self.pos
         if len(direction) != 0:
-            self.velocity = direction.normalize() * 11
+            self.velocity = direction.normalize() * self.aggresiveness
         self.pos += self.velocity
         
