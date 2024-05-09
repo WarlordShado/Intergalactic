@@ -3,14 +3,14 @@ from bullet import *
 import random as rnd
 
 class Gear(): #Basic Single Shot
-    def __init__(self,isForEnemy: bool = False) -> None:
-        self.bulletAmt = 1
+    def __init__(self,isForEnemy: bool = False,bulletAmt: int = 1,radius:int = 5,fireRate: int = 200, damage: int = 1) -> None:
+        self.bulletAmt = bulletAmt
         self.name = "Single Shot"
-        self.radius = 5
+        self.radius = radius
         self.handleVelo(isForEnemy)
         self.isEnemyGear = isForEnemy
-        self.fireRate = 200
-        self.dmg = 1
+        self.fireRate = fireRate
+        self.dmg = damage
         
     def handleVelo(self,isForEnemy: bool) -> None:
         if isForEnemy:
@@ -30,11 +30,9 @@ class Gear(): #Basic Single Shot
 
 class DoubleShot(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
-        super().__init__(isForEnemy)
-        self.bulletAmt = 2
+        super().__init__(isForEnemy,2,fireRate=400)
         self.name = "Double Shot"
         self.bulletSpacing = 20
-        self.fireRate = 400
         
     def getBulletList(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:
         bulletList = []
@@ -47,28 +45,25 @@ class DoubleShot(Gear):
         
 class TripleShot(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
-        super().__init__(isForEnemy)
-        self.bulletAmt = 3
+        super().__init__(isForEnemy,3,fireRate=400)
         self.name = "Triple Shot"
-        self.fireRate = 400
         
     def getBulletList(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:
         bulletList = []
-        velocityX = 2
+        velocityX = -2
+        velocityY = -10
 
         for i in range(self.bulletAmt):
-            self.velocity[0] = velocityX
+            self.velocity = [velocityX,velocityY]
             bulletList.append(Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity))
-            velocityX -= 2
+            velocityX += 2
             
         return bulletList
     
 class MachineGun(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
-        super().__init__(isForEnemy)
-        self.bulletAmt = 3
+        super().__init__(isForEnemy,fireRate = 100)
         self.name = "Machine Gun"
-        self.fireRate = 100
         
     def getBulletList(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:
         velocityX = rnd.randint(-2,2)
@@ -77,12 +72,8 @@ class MachineGun(Gear):
                  
 class HomingStrike(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
-        super().__init__(isForEnemy)
-        self.bulletAmt = 1
+        super().__init__(isForEnemy,radius=10,fireRate = 600,damage=3)
         self.name = "Homing Strike"
-        self.fireRate = 600
-        self.radius = 10
-        self.dmg = 3
         
     def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float,enemy) -> list:
         bulletList = []
