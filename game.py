@@ -31,7 +31,7 @@ class Game():
 
         self.makeEnemies()
 
-    def renderLables(self) -> None:
+    def renderLables(self) -> None: #Renders game labels
         font = pygame.freetype.SysFont("Comic Sans MS",32)
         font.render_to(self.win,(5,5),"Score: " + str(self.score),(255,255,255))
         
@@ -81,7 +81,7 @@ class Game():
         self.shootState = state
         
     def makeEnemies(self) -> None: #Filles the enemy array
-        ENEMYSPACING = 100
+        ENEMYSPACING = 100 #Space between enemies
         startX = self.SCREENCENTER - ENEMYSPACING * 2
         startY = ENEMYSPACING
         
@@ -97,13 +97,13 @@ class Game():
                 startX = self.SCREENCENTER - ENEMYSPACING * 2
                 startY += ENEMYSPACING
                 
-    def makeBoss(self) -> None:
+    def makeBoss(self) -> None: #Creates the boss object
         startX = self.SCREENCENTER
         startY = 125
         self.Boss = self.getBoss(startX,startY,30)
         self.Boss.startSpecial(self.win)
         
-    def getBoss(self,x,y,rad) -> Boss:
+    def getBoss(self,x,y,rad) -> Boss: #Obtains a random boss
         rnd = random.randint(1,3)
         match rnd:
             case 1:
@@ -126,7 +126,7 @@ class Game():
             if rnd == 5 :
                 self.Boss.reverseSpeed()
                
-    def enemyShoot(self) -> None:
+    def enemyShoot(self) -> None: #Spawns the enemy bullets and activates boss specials
         if not self.isBossRound:
             for enemy in (self.enemies):
                 rnd = random.randint(0,enemy.fireRate) 
@@ -152,7 +152,7 @@ class Game():
                     for item in bulletAdd:
                         self.enemiesBullets.append(item)
             
-    def checkCollisonCircle(self,Coords1:[],Coords2:[],Rad1:int,Rad2:int) -> bool:
+    def checkCollisonCircle(self,Coords1:[],Coords2:[],Rad1:int,Rad2:int) -> bool: #Checks if 2 circles collided
         #find the distance between the 2 center points of the circles
         distance = math.sqrt(math.pow(Coords1[0] - Coords2[0],2) + math.pow(Coords1[1] - Coords2[1],2))
 
@@ -160,23 +160,23 @@ class Game():
             return True
         return False
     
-    def GameOver(self) -> None:
+    def GameOver(self) -> None: #Renders labels at game over
         self.renderCenterText("Game Over!",(255,0,0))
         self.renderCenterText("Score: " + str(self.score),(50,205,50),50)
         self.renderCenterText("Click to Restart",(255,255,255),100)
-
-    def StartScreen(self) -> None:
+         
+    def StartScreen(self) -> None: #Renders labels at the start
         self.renderCenterText("Intergalatic",(0,255,255),-100,64)
         self.renderCenterText("Click to Start!",(255,255,255),35)
         self.renderCenterText("Selected Gear: " + self.player.gear.getName(),(255,255,255),125)
         self.renderCenterText("Hit R to Change!",(255,255,255),175)
     
-    def renderCenterText(self,text:str,rgb:(),offset:int = 0,fontSize: int = 28) -> None:
+    def renderCenterText(self,text:str,rgb:(),offset:int = 0,fontSize: int = 28) -> None: #Function that renders labels at the center
         font = pygame.freetype.SysFont("Comic Sans MS",fontSize)
         fontWidth = font.get_rect(text)
         font.render_to(self.win,(self.center - fontWidth.width / 2,(self.height / 3) + offset),text,rgb)
 
-    def gearSelect(self) -> None:
+    def gearSelect(self) -> None: #Allows the player to select gear
         self.gearSelectNum += 1
         match self.gearSelectNum:
             case 1:
@@ -191,7 +191,7 @@ class Game():
                 self.player.gear = HomingStrike()
             case 6:
                 self.player.gear = Sniper()
-                self.gearSelectNum = 0
+                self.gearSelectNum = 0 #Resets the match case
 
     def moveBullets(self) -> None:
         for bulletIndex,bullet in enumerate(self.bullets): #Iterates through all of the projectiles
@@ -238,12 +238,12 @@ class Game():
             else:
                 bullet.drawBullet(self.win)
 
-    def moveEnemyBullets(self) -> None:
+    def moveEnemyBullets(self) -> None: #Moves the enemy projectiles and cheks if they collided with the player
         for enemyBulIndex, bullet in enumerate(self.enemiesBullets):
             bullet.moveBullet()
                         
             if self.checkCollisonCircle([bullet.getX(),bullet.getY()],[self.player.getX(),self.player.getY()],bullet.getRad(),self.player.getRad()):
-                if type(bullet) is KillBullet:
+                if type(bullet) is KillBullet: #Kill Bullets one shot the player
                     del self.enemiesBullets[enemyBulIndex]
                     self.player.health = 0
                 else:
@@ -255,7 +255,7 @@ class Game():
             else:   
                 bullet.drawBullet(self.win)
                 
-    def moveCoin(self) -> None:
+    def moveCoin(self) -> None:#Moves coins and boss tokens. Updates score if they are collected
         if len(self.coins) > 0:
             for coinIndex, coin in enumerate(self.coins):
                 coin.moveCoin()
@@ -274,14 +274,14 @@ class Game():
             return True
         return False
 
-    def update(self) -> None:
+    def update(self) -> None: #Updates the positions of all the objects and calles attack functions
         self.enemyShoot()
         self.moveEnemies()
         self.moveBullets()
         self.moveEnemyBullets()
         self.moveCoin()
         
-    def incRound(self) -> None:
+    def incRound(self) -> None: #increases the round number and sets the boss round
         if self.player.health < 5:
             self.player.health += 1
             self.round += 1
@@ -291,7 +291,7 @@ class Game():
             else:
                 self.makeEnemies()
                 
-    def updateBoss(self) -> None:
+    def updateBoss(self) -> None: #Changes the boss's color and draws it. if it summons stuff, it will draw that too
         self.Boss.changeColor()
         self.Boss.drawEnemy(self.win)
         if type(self.Boss) is Overseer:
