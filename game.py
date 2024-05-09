@@ -23,7 +23,7 @@ class Game():
         self.score = 0
         self.gameOver = False
         self.startGame = False
-        self.round = 4
+        self.round = 1
         self.gearSelectNum = 0
         
         self.isBossRound = False

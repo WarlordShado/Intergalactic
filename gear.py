@@ -80,7 +80,7 @@ class HomingStrike(Gear):
         super().__init__(isForEnemy)
         self.bulletAmt = 1
         self.name = "Homing Strike"
-        self.fireRate = 150
+        self.fireRate = 600
         self.radius = 10
         self.dmg = 3
         
