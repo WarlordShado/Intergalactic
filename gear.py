@@ -3,20 +3,21 @@ from bullet import *
 import random as rnd
 
 class Gear(): #Basic Single Shot
-    def __init__(self,isForEnemy: bool = False,bulletAmt: int = 1,radius:int = 5,fireRate: int = 200, damage: int = 1) -> None:
+    def __init__(self,isForEnemy: bool = False,bulletAmt: int = 1,radius:int = 5,fireRate: int = 200, damage: int = 1,pierce: int = 0,bulletSpeed: int = 10) -> None:
         self.bulletAmt = bulletAmt
         self.name = "Single Shot"
         self.radius = radius
-        self.handleVelo(isForEnemy)
+        self.handleVelo(isForEnemy,bulletSpeed)
         self.isEnemyGear = isForEnemy
         self.fireRate = fireRate
         self.dmg = damage
+        self.pierce = pierce
         
-    def handleVelo(self,isForEnemy: bool) -> None:
+    def handleVelo(self,isForEnemy: bool,bulletSpeed) -> None:
         if isForEnemy:
-            self.velocity = [0,10]
+            self.velocity = [0,bulletSpeed]
         else:
-            self.velocity = [0,-10]
+            self.velocity = [0,bulletSpeed * -1]
 
     def getName(self) -> str:
         return self.name
@@ -68,7 +69,7 @@ class MachineGun(Gear):
     def getBulletList(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:
         velocityX = rnd.randint(-2,2)
         self.velocity[0] = velocityX
-        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity)]
+        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.pierce)]
                  
 class HomingStrike(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
@@ -76,8 +77,16 @@ class HomingStrike(Gear):
         self.name = "Homing Strike"
         
     def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float,enemy) -> list:
-        bulletList = []
+        return [HomingBullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,enemy)]
+    
+class Sniper(Gear):
+    def __init__(self,isForEnemy: bool = False) -> None:
+        super().__init__(isForEnemy,1,7,750,7,3,25)
+        self.name = "Snipe"
         
-        bulletList.append(HomingBullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,enemy))
-            
-        return bulletList
+    def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float) -> list:
+        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.pierce)]
+        
+
+
+

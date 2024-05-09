@@ -190,6 +190,8 @@ class Game():
                 self.player.gear = MachineGun()
             case 5:
                 self.player.gear = HomingStrike()
+            case 6:
+                self.player.gear = Sniper()
                 self.gearSelectNum = 0
 
     def moveBullets(self) -> None:
@@ -205,7 +207,10 @@ class Game():
                             
                         del self.enemies[enemyIndex] #Deletes the Enemy
                         if len(self.bullets) != 0: #bullet list is sometimes zero and breaks so this prevents it
-                            del self.bullets[bulletIndex] #Deletes the Bullet
+                            if bullet.pierce == 0:
+                                del self.bullets[bulletIndex] #Deletes the Bullet
+                            else:
+                                bullet.pierce -= 1
                         
                         self.addScore(100)
             else:

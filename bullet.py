@@ -2,10 +2,11 @@ import pygame
 import math
 
 class Bullet():
-    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list):
+    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list,pierce:int = 0):
         self.pos = pygame.Vector2([xpos,ypos])
         self.rad = rad
         self.velocity = velocity
+        self.pierce = pierce
         self.bulletColor = (0,255,0)
         
     def moveBullet(self) -> None:
