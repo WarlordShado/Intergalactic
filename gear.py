@@ -84,7 +84,7 @@ class HomingStrike(Gear):
         super().__init__(isForEnemy,radius=10,fireRate = 750,damage=3)
         self.name = "Homing Strike"
         
-    def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float,enemy) -> list:
+    def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float,enemy:object) -> list:
         return [HomingBullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,enemy)]
     
 class Sniper(Gear):

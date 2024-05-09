@@ -176,7 +176,7 @@ class Game():
         fontWidth = font.get_rect(text)
         font.render_to(self.win,(self.center - fontWidth.width / 2,(self.height / 3) + offset),text,rgb)
 
-    def gearSelect(self):
+    def gearSelect(self) -> None:
         self.gearSelectNum += 1
         match self.gearSelectNum:
             case 1:

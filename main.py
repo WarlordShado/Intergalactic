@@ -6,7 +6,7 @@ BLACK = (0,0,0)
 WIDTH = 600.0
 HEIGHT = 850.0
 
-def main():
+def main() -> None:
     pygame.init()
     screen = pygame.display.set_mode((WIDTH,HEIGHT))
     clock = pygame.time.Clock();
@@ -49,8 +49,6 @@ def main():
         else:
             game.GameOver()
             
-        
-
         pygame.display.update()
         screen.fill(BLACK)
         clock.tick(60)

@@ -1,4 +1,3 @@
-from pyclbr import Class
 import pygame
 from bullet import *
 from gear import *

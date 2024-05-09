@@ -32,7 +32,7 @@ class Bullet():
         return self.pos.y
 
 class KillBullet(Bullet):
-    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list):
+    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list) -> None:
         super().__init__(xpos,ypos,rad,velocity)
         self.bulletColor = (255,0,0)
         

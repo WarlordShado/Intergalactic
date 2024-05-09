@@ -5,7 +5,6 @@ class Sprite():
         self.image = pygame.image.load(imagePath).convert_alpha()
         self.imageSurface = pygame.Surface((width,height)).convert_alpha()
         self.imageSurface.blit(self.image,(0,0))
-        
 
     def getImage(self, screen: pygame.Surface,position:tuple) -> None:
         screen.blit(self.imageSurface,position)
