@@ -113,7 +113,7 @@ class Game():
             case 3:
                 return Rouge(x,y,rad)
                 
-    def moveEnemies(self) -> None:
+    def moveEnemies(self) -> None: #MAKE LESS RANDOM
         if not self.isBossRound: 
             for enemy in (self.enemies):
                 enemy.moveEnemy()
