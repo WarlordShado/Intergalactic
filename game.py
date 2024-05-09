@@ -35,7 +35,7 @@ class Game():
         font = pygame.freetype.SysFont("Comic Sans MS",32)
         font.render_to(self.win,(5,5),"Score: " + str(self.score),(255,255,255))
         
-        font.render_to(self.win,(350,5),"Multiplyer: X" + str(self.player.getScoreMultiplyer()),(255,255,255))
+        font.render_to(self.win,(350,5),"Multiplyer: X" + str(round(self.player.getScoreMultiplyer(),1)),(255,255,255))
         
         font.render_to(self.win,(5,820),"Health: " + str(self.player.health) + "/5",(255,255,255))
         
@@ -44,8 +44,8 @@ class Game():
             font.render_to(self.win,(150,47), self.Boss.getName() + " Health: " + str(self.Boss.health) + "/" + str(self.Boss.maxHp),(255,0,0))
         
     def addScore(self,scoreAmt:int) -> None: #Adds points to the player's score
-        self.score += scoreAmt * self.player.getScoreMultiplyer()
-
+        self.score += math.floor(scoreAmt * self.player.getScoreMultiplyer())
+        
     def handleInput(self) -> None: #Self Explanatory
         keys = pygame.key.get_pressed()
 
@@ -105,7 +105,6 @@ class Game():
         
     def getBoss(self,x,y,rad) -> Boss:
         rnd = random.randint(1,3)
-        rnd = 3
         match rnd:
             case 1:
                 return Overseer(x,y,rad)
