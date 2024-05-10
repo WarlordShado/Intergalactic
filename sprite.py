@@ -8,3 +8,8 @@ class Sprite():
 
     def getImage(self, screen: pygame.Surface,position:tuple) -> None:
         screen.blit(self.imageSurface,position)
+
+    def rotate(self,angle):
+        self.image = pygame.transform.rotate(self.image,angle)
+        self.imageSurface.fill((0,0,0,0))
+        self.imageSurface.blit(self.image,(0,0))

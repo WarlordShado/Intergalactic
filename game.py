@@ -59,17 +59,18 @@ class Game():
         if keys[pygame.K_UP] and self.shootState: 
             bulletAdd = []
             if type(self.player.gear) is HomingStrike: #Deals with creating homing bullets
-                if not self.isBossRound:
-                    bulletAdd = self.player.shoot(self.enemies.getRandEnemy())
-                else:
-                    if type(self.Boss) is Overseer:
-                        if len(self.Boss.minionList) != 0:
-                            rnd = random.randint(0,len(self.Boss.minionList) - 1)
-                            bulletAdd = self.player.shoot(self.Boss.minionList[rnd])
+                #if len(self.enemies.enemyList) != 0:
+                    if not self.isBossRound:
+                        bulletAdd = self.player.shoot(self.enemies.getRandEnemy())
+                    else:
+                        if type(self.Boss) is Overseer:
+                            if len(self.Boss.minionList) != 0:
+                                rnd = random.randint(0,len(self.Boss.minionList) - 1)
+                                bulletAdd = self.player.shoot(self.Boss.minionList[rnd])
+                            else:
+                                bulletAdd = self.player.shoot(self.Boss)
                         else:
                             bulletAdd = self.player.shoot(self.Boss)
-                    else:
-                        bulletAdd = self.player.shoot(self.Boss)
             else:
                 bulletAdd = self.player.shoot()
                 
@@ -82,6 +83,7 @@ class Game():
         
     def makeEnemies(self) -> None: #Filles the enemy array
         self.enemies = SquareForm(self.center * 2,self.height)
+        self.enemies.createFormation(self.center)
                 
     def makeBoss(self) -> None: #Creates the boss object
         startX = self.SCREENCENTER
@@ -223,19 +225,22 @@ class Game():
     def moveEnemyBullets(self) -> None: #Moves the enemy projectiles and cheks if they collided with the player
         for enemyBulIndex, bullet in enumerate(self.enemiesBullets):
             bullet.moveBullet()
-                        
-            if self.checkCollisonCircle([bullet.getX(),bullet.getY()],[self.player.getX(),self.player.getY()],bullet.getRad(),self.player.getRad()):
-                if type(bullet) is KillBullet: #Kill Bullets one shot the player
-                    del self.enemiesBullets[enemyBulIndex]
-                    self.player.health = 0
-                else:
-                    del self.enemiesBullets[enemyBulIndex]
-                    self.player.health -= 1
+
+            if not bullet.getY() > self.height:   
+                if self.checkCollisonCircle([bullet.getX(),bullet.getY()],[self.player.getX(),self.player.getY()],bullet.getRad(),self.player.getRad()):
+                    if type(bullet) is KillBullet: #Kill Bullets one shot the player
+                        del self.enemiesBullets[enemyBulIndex]
+                        self.player.health = 0
+                    else:
+                        del self.enemiesBullets[enemyBulIndex]
+                        self.player.health -= 1
                     
-            if self.player.health <= 0:
-                self.gameOver = True
-            else:   
-                bullet.drawBullet(self.win)
+                if self.player.health <= 0:
+                    self.gameOver = True
+                else:   
+                    bullet.drawBullet(self.win)
+            else:
+                del self.enemiesBullets[enemyBulIndex]
                 
     def moveCoin(self) -> None:#Moves coins and boss tokens. Updates score if they are collected
         if len(self.coins) > 0:
@@ -257,6 +262,9 @@ class Game():
         return False
 
     def update(self) -> None: #Updates the positions of all the objects and calles attack functions
+        if len(self.enemies.enemyList) == 1:
+            pass
+
         self.enemyShoot()
         self.moveEnemies()
         self.moveBullets()

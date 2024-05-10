@@ -1,4 +1,5 @@
 import pygame
+from sprite import *
 from bullet import *
 from gear import *
 
@@ -11,9 +12,11 @@ class Enemy():
         self.hasCoin = hasCoin
         self.gear = Gear(True)
         self.fireRate = 500
+        self.enemySprite = Sprite("sprites\Enemy.png",30,30)
         
     def drawEnemy(self,screen:pygame.Surface) -> None:
-        pygame.draw.circle(screen,(255,0,0),(self.x,self.y),self.rad,0)
+        pygame.draw.circle(screen,(0,0,0),(self.x,self.y),self.rad,0)
+        self.enemySprite.getImage(screen,(self.x - self.rad,self.y - self.rad))
         
     def moveEnemy(self) -> None:
         if self.x + self.speed < self.rad:
