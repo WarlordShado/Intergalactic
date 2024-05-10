@@ -7,6 +7,7 @@ from player import *
 from bullet import *
 from enemy import *
 from gear import *
+from formation import *
 
 class Game():
     def __init__(self,screen:pygame.Surface,center:float,height:float) -> None:
@@ -16,14 +17,14 @@ class Game():
         self.height = height
         self.center = center
         self.bullets = []
-        self.enemies = []
+        self.enemies = Formation(self.center * 2,self.height)
         self.enemiesBullets = []
         self.coins = []
         self.shootState = True
         self.score = 0
         self.gameOver = False
         self.startGame = False
-        self.round = 1
+        self.round = 4
         self.gearSelectNum = 0
         
         self.isBossRound = False
@@ -59,8 +60,7 @@ class Game():
             bulletAdd = []
             if type(self.player.gear) is HomingStrike: #Deals with creating homing bullets
                 if not self.isBossRound:
-                    rnd = random.randint(0,len(self.enemies) - 1)
-                    bulletAdd = self.player.shoot(self.enemies[rnd])
+                    bulletAdd = self.player.shoot(self.enemies.getRandEnemy())
                 else:
                     if type(self.Boss) is Overseer:
                         if len(self.Boss.minionList) != 0:
@@ -81,21 +81,23 @@ class Game():
         self.shootState = state
         
     def makeEnemies(self) -> None: #Filles the enemy array
-        ENEMYSPACING = 100 #Space between enemies
-        startX = self.SCREENCENTER - ENEMYSPACING * 2
-        startY = ENEMYSPACING
+        self.enemies = SquareForm(self.center * 2,self.height)
+
+        # ENEMYSPACING = 100 #Space between enemies
+        # startX = self.SCREENCENTER - ENEMYSPACING * 2
+        # startY = ENEMYSPACING
         
-        for i in range(1,16):
-            rnd = random.randint(1,15)
-            if rnd == 10:
-                self.enemies.append(Enemy(startX,startY,15,True))
-            else:
-                self.enemies.append(Enemy(startX,startY,15,False))
-            startX += ENEMYSPACING
+        # for i in range(1,16):
+        #     rnd = random.randint(1,15)
+        #     if rnd == 10:
+        #         self.enemies.append(Enemy(startX,startY,15,True))
+        #     else:
+        #         self.enemies.append(Enemy(startX,startY,15,False))
+        #     startX += ENEMYSPACING
                 
-            if i % 5 == 0:
-                startX = self.SCREENCENTER - ENEMYSPACING * 2
-                startY += ENEMYSPACING
+        #     if i % 5 == 0:
+        #         startX = self.SCREENCENTER - ENEMYSPACING * 2
+        #         startY += ENEMYSPACING
                 
     def makeBoss(self) -> None: #Creates the boss object
         startX = self.SCREENCENTER
@@ -115,11 +117,7 @@ class Game():
                 
     def moveEnemies(self) -> None: #MAKE LESS RANDOM
         if not self.isBossRound: 
-            for enemy in (self.enemies):
-                enemy.moveEnemy()
-                rnd = random.randint(1,10)
-                if rnd == 5 :
-                    enemy.reverseSpeed() #Makes the enemy switch directions
+            self.enemies.update()
         else:
             self.Boss.moveEnemy()
             rnd = random.randint(1,10)
@@ -128,7 +126,7 @@ class Game():
                
     def enemyShoot(self) -> None: #Spawns the enemy bullets and activates boss specials
         if not self.isBossRound:
-            for enemy in (self.enemies):
+            for enemy in (self.enemies.enemyList):
                 rnd = random.randint(0,enemy.fireRate) 
                 if rnd == 10: #Random chance for the enemies to shoot
                     bulletAdd = enemy.shoot()
@@ -199,12 +197,12 @@ class Game():
             bullet.update()
             
             if not self.isBossRound: #If it isnt a boss round, check if bullets hit the enemies
-                for enemyIndex,target in enumerate(self.enemies): #Iterates through all enemies to see if a projectile hit it
+                for enemyIndex,target in enumerate(self.enemies.enemyList): #Iterates through all enemies to see if a projectile hit it
                     if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
-                        if self.enemies[enemyIndex].hasCoin:
-                            self.coins.append(Coin(100,self.enemies[enemyIndex].getX(),self.enemies[enemyIndex].getY(),5))
+                        if self.enemies.enemyList[enemyIndex].hasCoin:
+                            self.coins.append(Coin(100,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
                             
-                        del self.enemies[enemyIndex] #Deletes the Enemy
+                        del self.enemies.enemyList[enemyIndex] #Deletes the Enemy
                         if len(self.bullets) != 0: #bullet list is sometimes zero and breaks so this prevents it
                             if bullet.pierce == 0:
                                 del self.bullets[bulletIndex] #Deletes the Bullet
@@ -270,7 +268,7 @@ class Game():
                 coin.drawCoin(self.win)
             
     def needMoreEnemy(self) -> bool: #checks if all of the enemies are gone
-        if len(self.enemies) <= 0 or self.isBossRound and self.Boss == None:
+        if len(self.enemies.enemyList) <= 0 or self.isBossRound and self.Boss == None:
             return True
         return False
 
@@ -307,9 +305,8 @@ class Game():
                 self.incRound()
             if self.isBossRound: #Draws the boss if it is a boss round
                 self.updateBoss()
-            else:
-                for index,item in enumerate(self.enemies): #Draws all of the Enemies
-                    item.drawEnemy(self.win)
+            else: #Draws all of the Enemies
+                 self.enemies.drawEnemies(self.win)
 
             self.renderLables()
             self.player.drawPlayer(self.win)
