@@ -82,22 +82,6 @@ class Game():
         
     def makeEnemies(self) -> None: #Filles the enemy array
         self.enemies = SquareForm(self.center * 2,self.height)
-
-        # ENEMYSPACING = 100 #Space between enemies
-        # startX = self.SCREENCENTER - ENEMYSPACING * 2
-        # startY = ENEMYSPACING
-        
-        # for i in range(1,16):
-        #     rnd = random.randint(1,15)
-        #     if rnd == 10:
-        #         self.enemies.append(Enemy(startX,startY,15,True))
-        #     else:
-        #         self.enemies.append(Enemy(startX,startY,15,False))
-        #     startX += ENEMYSPACING
-                
-        #     if i % 5 == 0:
-        #         startX = self.SCREENCENTER - ENEMYSPACING * 2
-        #         startY += ENEMYSPACING
                 
     def makeBoss(self) -> None: #Creates the boss object
         startX = self.SCREENCENTER
