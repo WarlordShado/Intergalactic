@@ -28,8 +28,6 @@ class Player():
     def shoot(self,enemy:Enemy = None) -> list: #For Gear, Return a list
         if enemy == None:
             return self.gear.getBulletList(self.x,self.y,self.rad)
-        elif type(self.gear) is HomingStrike:
-            return self.gear.getBulletList(self.x,self.y,self.rad,enemy)
             
     def getScoreMultiplyer(self) -> None:
         return (self.totalBossTokens * 0.1) + 1
