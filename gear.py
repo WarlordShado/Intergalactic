@@ -32,7 +32,7 @@ class Gear(): #Basic Single Shot
 class DoubleShot(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
         super().__init__(isForEnemy,2,fireRate=400,damage=2)
-        self.name = "Twin Gun"
+        self.name = "Twin Strike"
         self.bulletSpacing = 20
         
     def getBulletList(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:
