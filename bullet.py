@@ -17,6 +17,9 @@ class Bullet():
                 self.bulletImage = Sprite("sprites\EnemyBullet.png",10,10)
             else:
                 self.bulletImage = Sprite("sprites\BasicBullet.png",10,10)
+                
+        if rad > 10:
+            self.bulletColor = (255,0,0)
         
     def moveBullet(self) -> None:
         self.pos.x += self.velocity[0]
@@ -24,7 +27,8 @@ class Bullet():
         
     def drawBullet(self,screen:pygame.Surface) -> None:
         pygame.draw.circle(screen,self.bulletColor,(self.pos.x,self.pos.y),self.rad,0)
-        self.bulletImage.getImage(screen,(self.pos.x - self.rad,self.pos.y - self.rad))
+        if not self.rad > 10:
+            self.bulletImage.getImage(screen,(self.pos.x - self.rad,self.pos.y - self.rad))
         
     def update(self) -> None:
         pass
@@ -45,23 +49,4 @@ class KillBullet(Bullet):
         
     def drawBullet(self,screen:pygame.Surface) -> None:
         pygame.draw.circle(screen,self.bulletColor,(self.pos.x,self.pos.y),self.rad,0)
-    
-class HomingBullet(Bullet):
-    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list,lockedEnemy,agg: int = 11) -> None:
-        super().__init__(xpos,ypos,rad,velocity)
-        self.lockedEnemy = lockedEnemy
-        self.aggresiveness = agg
-        self.bulletImage = Sprite("sprites\HomingMissle.png",20,20)
-        
-    def drawBullet(self,screen:pygame.Surface) -> None:
-        pygame.draw.circle(screen,self.bulletColor,(self.pos.x,self.pos.y),self.rad,0)
-        self.bulletImage.getImage(screen,(self.pos.x - self.rad,self.pos.y - self.rad))
-        
-    def update(self) -> None:
-        enemyPos = pygame.Vector2([self.lockedEnemy.getX(),self.lockedEnemy.getY()])
-        direction = enemyPos - self.pos
-
-        if len(direction) != 0:
-            self.velocity = direction.normalize() * self.aggresiveness
-        self.pos += self.velocity
         

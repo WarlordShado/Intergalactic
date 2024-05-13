@@ -78,19 +78,19 @@ class MachineGun(Gear):
             bulletList.append(Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.pierce))
 
         return bulletList
-                 
-class HomingStrike(Gear):
-    def __init__(self,isForEnemy: bool = False) -> None:
-        super().__init__(isForEnemy,radius=10,fireRate = 750,damage=3)
-        self.name = "Homing Strike"
-        
-    def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float,enemy:object) -> list:
-        return [HomingBullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,enemy)]
     
 class Sniper(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
-        super().__init__(isForEnemy,1,7,900,7,3,25)
+        super().__init__(isForEnemy,1,7,900,7,2,25)
         self.name = "Sniper"
+        
+    def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float) -> list:
+        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.pierce,True)]
+    
+class BlackHole(Gear):
+    def __init__(self,isForEnemy: bool = False) -> None:
+        super().__init__(isForEnemy,1,15,1500,10,10,3)
+        self.name = "Black Hole"
         
     def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float) -> list:
         return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.pierce)]

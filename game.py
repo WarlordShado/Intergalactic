@@ -36,7 +36,7 @@ class Game():
         font = pygame.freetype.SysFont("Comic Sans MS",32)
         font.render_to(self.win,(5,5),"Score: " + str(self.score),(255,255,255))
         
-        font.render_to(self.win,(350,5),"Multiplyer: X" + str(round(self.player.getScoreMultiplyer(),1)),(255,255,255))
+        font.render_to(self.win,(350,5),"Multiplier: X" + str(round(self.player.getScoreMultiplyer(),1)),(255,255,255))
         
         font.render_to(self.win,(5,820),"Health: " + str(self.player.health) + "/5",(255,255,255))
         
@@ -58,21 +58,7 @@ class Game():
             
         if keys[pygame.K_UP] and self.shootState: 
             bulletAdd = []
-            if type(self.player.gear) is HomingStrike: #Deals with creating homing bullets
-                #if len(self.enemies.enemyList) != 0:
-                    if not self.isBossRound:
-                        bulletAdd = self.player.shoot(self.enemies.getRandEnemy())
-                    else:
-                        if type(self.Boss) is Overseer:
-                            if len(self.Boss.minionList) != 0:
-                                rnd = random.randint(0,len(self.Boss.minionList) - 1)
-                                bulletAdd = self.player.shoot(self.Boss.minionList[rnd])
-                            else:
-                                bulletAdd = self.player.shoot(self.Boss)
-                        else:
-                            bulletAdd = self.player.shoot(self.Boss)
-            else:
-                bulletAdd = self.player.shoot()
+            bulletAdd = self.player.shoot()
                 
             for bullet in bulletAdd:
                 self.bullets.append(bullet)
@@ -172,30 +158,31 @@ class Game():
             case 4:
                 self.player.gear = MachineGun()
             case 5:
-                self.player.gear = HomingStrike()
-            case 6:
                 self.player.gear = Sniper()
+            case 6:
+                self.player.gear = BlackHole()
                 self.gearSelectNum = 0 #Resets the match case
 
     def moveBullets(self) -> None:
         for bulletIndex,bullet in enumerate(self.bullets): #Iterates through all of the projectiles
             bullet.moveBullet()
-            bullet.update()
             
             if not self.isBossRound: #If it isnt a boss round, check if bullets hit the enemies
                 for enemyIndex,target in enumerate(self.enemies.enemyList): #Iterates through all enemies to see if a projectile hit it
                     if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
                         if self.enemies.enemyList[enemyIndex].hasCoin:
                             self.coins.append(Coin(100,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
-                            
-                        del self.enemies.enemyList[enemyIndex] #Deletes the Enemy
-                        if len(self.bullets) != 0: #bullet list is sometimes zero and breaks so this prevents it
-                            if bullet.pierce == 0:
-                                del self.bullets[bulletIndex] #Deletes the Bullet
-                            else:
-                                bullet.pierce -= 1
+                        try:
+                            del self.enemies.enemyList[enemyIndex] #Deletes the Enemy
+                            if len(self.bullets) != 0: #bullet list is sometimes zero and breaks so this prevents it
+                                if bullet.pierce <= 0 or bullet.getY() <= 0:
+                                    del self.bullets[bulletIndex] #Deletes the Bullet
+                                else:
+                                    bullet.pierce -= 1
                         
-                        self.addScore(100)
+                            self.addScore(100)
+                        except IndexError as ex: #This Shouldn't Fire, Hopefully
+                            print(ex)
             else:
                 if self.Boss.canBeHurt(): #Boss can't be hurt untile all minions are gone
 
@@ -257,7 +244,7 @@ class Game():
                 coin.drawCoin(self.win)
             
     def needMoreEnemy(self) -> bool: #checks if all of the enemies are gone
-        if len(self.enemies.enemyList) <= 0 or self.isBossRound and self.Boss == None:
+        if len(self.enemies.enemyList) == 0 or self.isBossRound and self.Boss == None:
             return True
         return False
 
@@ -274,12 +261,14 @@ class Game():
     def incRound(self) -> None: #increases the round number and sets the boss round
         if self.player.health < 5:
             self.player.health += 1
-            self.round += 1
-            if self.round % 5 == 0:
-                self.isBossRound = True
-                self.makeBoss()
-            else:
-                self.makeEnemies()
+            
+        self.round += 1
+            
+        if self.round % 5 == 0:
+            self.isBossRound = True
+            self.makeBoss()
+        else:
+            self.makeEnemies()
                 
     def updateBoss(self) -> None: #Changes the boss's color and draws it. if it summons stuff, it will draw that too
         self.Boss.changeColor()

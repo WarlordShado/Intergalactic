@@ -23,9 +23,8 @@ class Formation(): #Template
 
 class SquareForm(Formation):
     def __init__(self,screenWidth:float,screenHeight:float) -> None:
-        self.enemySpacing = 50
         super().__init__(screenWidth,screenHeight)
-        self.createFormation(screenWidth // 2)
+        self.enemySpacing = 50
         
     def createFormation(self,center) -> None:
         Count = 0
@@ -40,6 +39,7 @@ class SquareForm(Formation):
                 hasCoin = True
             
             self.enemyList.append(Enemy(startX,startY,15,hasCoin))
+            #print("(" , startX , "," , startY , ")")
             startX += self.enemySpacing
             if Count >= 4:
                 startY += self.enemySpacing
@@ -47,7 +47,7 @@ class SquareForm(Formation):
                 startX = center - (self.enemySpacing * 2)
             else:
                 Count += 1
-            
+                
     def drawEnemies(self,win:pygame.Surface) -> None:
         for enemy in self.enemyList:
             enemy.drawEnemy(win)
