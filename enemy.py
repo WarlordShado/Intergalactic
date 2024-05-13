@@ -126,8 +126,7 @@ class Rouge(Boss):
         self.specRate = 100
         
     def special(self, screen:pygame.Surface) -> list:
-        bulletAdd = [KillBullet(self.getX(),self.getY() + self.rad,25,[0,7.5])]
-        return bulletAdd
+        return [KillBullet(self.getX(),self.getY() + self.rad,25,[0,7.5])]
             
     
 class Minion(Boss): #Boss Minion, They can't move
