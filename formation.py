@@ -1,4 +1,3 @@
-from gc import enable
 import pygame
 from enemy import *
 import random as rnd
