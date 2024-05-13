@@ -32,7 +32,7 @@ class Gear(): #Basic Single Shot
 class DoubleShot(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
         super().__init__(isForEnemy,2,fireRate=400,damage=2)
-        self.name = "Double Shot"
+        self.name = "Twin Gun"
         self.bulletSpacing = 20
         
     def getBulletList(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:
@@ -46,8 +46,8 @@ class DoubleShot(Gear):
         
 class TripleShot(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
-        super().__init__(isForEnemy,3,fireRate=425,damage=2)
-        self.name = "Triple Shot"
+        super().__init__(isForEnemy,5,fireRate=425,damage=2)
+        self.name = "Fusillade"
         
     def getBulletList(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:
         bulletList = []
@@ -60,7 +60,7 @@ class TripleShot(Gear):
         for i in range(self.bulletAmt):
             self.velocity = [velocityX,velocityY]
             bulletList.append(Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity))
-            velocityX += 2
+            velocityX += 1
             
         return bulletList
     

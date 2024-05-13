@@ -59,9 +59,7 @@ class SquareForm(Formation):
                 reverseEnemy = True
                 break
             
-        if reverseEnemy: #Reverses the enemy speed if needed
-            for enemy in self.enemyList:
-                enemy.reverseSpeed()
-
         for enemy in self.enemyList: #Moves the Enemies
+            if reverseEnemy: #Reverses the enemy speed if needed
+                enemy.reverseSpeed()
             enemy.moveEnemy()
