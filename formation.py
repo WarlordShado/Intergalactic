@@ -122,7 +122,9 @@ class HiveFormation(BossFormation):
                     for item in bulletCheck:
                         bulletList.append(item)
         else:
-            bulletList = self.Boss.shoot()
+            rndShoot = rnd.randint(0,self.Boss.fireRate)
+            if rndShoot == 10:
+                bulletList = self.Boss.shoot()
                 
         return bulletList
 

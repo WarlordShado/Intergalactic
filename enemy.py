@@ -89,7 +89,7 @@ class Goliath(Boss):
         self.health = 45
         self.color = (255,0,0)
         self.name = "Goliath"
-        self.gear = TripleShot(True)
+        self.gear =  DoubleShot(True) 
         self.fireRate = 40
         self.specRate = 250
         
@@ -107,7 +107,7 @@ class Teleporter(Boss):
         self.name = "Telefrag"
         self.gear = MachineGun(True)
         self.fireRate = 40
-        self.specRate = 200
+        self.specRate = 75
         
     def special(self) -> None:
         getLoc = rnd.randint(self.rad,self.scrWidth - self.rad)
@@ -136,8 +136,8 @@ class Rouge(Boss):
         self.health = 15
         self.color = (0,255,255)
         self.name = "Rouge"
-        self.gear = DoubleShot(True)
-        self.fireRate = 20
+        self.gear = TripleShot(True)
+        self.fireRate = 30
         self.specRate = 100
         
     def special(self, screen:pygame.Surface) -> list:
@@ -148,6 +148,7 @@ class Minion(Boss): #Boss Minion, They can't move
     def __init__(self,xPos: float,yPos: float,rad: int) -> None:
         super().__init__(xPos,yPos,rad)
         self.health = 3
+        self.fireRate = 250
         
     def changeColor(self) -> None:
         if self.health == 3:

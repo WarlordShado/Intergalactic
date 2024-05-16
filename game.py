@@ -25,7 +25,7 @@ class Game():
         self.score = 0
         self.gameOver = False
         self.startGame = False
-        self.round = 4
+        self.round = 1
         self.gearSelectNum = 0
         
         self.isBossRound = False
@@ -90,7 +90,7 @@ class Game():
             
         
     def getBoss(self,x,y,rad) -> Boss: #Obtains a random boss
-        rnd = random.randint(1,3)
+        rnd = random.randint(1,4)
         match rnd:
             case 1:
                 return Overseer(x,y,rad)
