@@ -1,4 +1,3 @@
-from cgitb import strong
 import math
 import pygame
 import pygame.freetype
