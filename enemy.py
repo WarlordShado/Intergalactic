@@ -14,18 +14,14 @@ class Enemy():
         self.fireRate = 500
         self.enemySprite = Sprite("sprites\Enemy.png",30,30)
         self.health = 1
+        self.scoreVal = 100
         
     def drawEnemy(self,screen:pygame.Surface) -> None:
         pygame.draw.circle(screen,(0,0,0),(self.x,self.y),self.rad,0)
         self.enemySprite.getImage(screen,(self.x - self.rad,self.y - self.rad))
         
     def moveEnemy(self) -> None:
-        if self.x + self.speed < self.rad:
-            self.x -= self.speed
-        elif self.x + self.speed > 600 - self.rad:
-            self.x -= self.speed
-        else:
-            self.x += self.speed
+        self.x += self.speed
             
     def shoot(self) -> Bullet:
         return self.gear.getBulletList(self.x,self.y,self.rad)
@@ -47,6 +43,7 @@ class StrongEnemy(Enemy):
         super().__init__(xPos,yPos,rad,hasCoin)
         self.enemySprite = Sprite("sprites\StrongEnemy.png",30,30)
         self.health = 3
+        self.scoreVal = 300
     
 class Boss(Enemy): #Used as a Structure for inheritance
     def __init__(self,xPos:float,yPos:float,rad:int) -> None:
@@ -94,11 +91,27 @@ class Goliath(Boss):
         self.name = "Goliath"
         self.gear = TripleShot(True)
         self.fireRate = 40
-        self.specRate = 400
+        self.specRate = 250
         
     def special(self) -> None:
         if self.health < self.maxHp:
             self.health += 3
+
+class Teleporter(Boss):
+    def __init__(self,xPos:float,yPos:float,rad:int,scrWidth:int) -> None:
+        super().__init__(xPos,yPos,rad)
+        self.scrWidth = scrWidth
+        self.maxHp = 25
+        self.health = 25
+        self.color = (255,0,0)
+        self.name = "Telefrag"
+        self.gear = MachineGun(True)
+        self.fireRate = 40
+        self.specRate = 200
+        
+    def special(self) -> None:
+        getLoc = rnd.randint(self.rad,self.scrWidth - self.rad)
+        self.x = getLoc
 
 class Overseer(Boss):
     def __init__(self,xPos:float,yPos:float,rad:int) -> None:

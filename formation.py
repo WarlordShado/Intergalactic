@@ -32,7 +32,7 @@ class Formation(): #Template
                 
         return bulletList
         
-    def update(self):
+    def update(self) -> None:
         reverseEnemy = False
         for enemy in self.enemyList: #Checks if enemies need to start going the other way
             if enemy.getX() - enemy.rad <= 0 or enemy.getX() + enemy.rad >= self.screenWidth:
@@ -126,7 +126,7 @@ class HiveFormation(BossFormation):
                 
         return bulletList
 
-    def update(self):
+    def update(self) -> None:
         reverseEnemy = False
         
         if self.Boss.getX() - self.Boss.rad <= 0 or self.Boss.getX() + self.Boss.rad >= self.screenWidth:

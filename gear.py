@@ -73,8 +73,13 @@ class MachineGun(Gear):
         bulletList = []
 
         for i in range(self.bulletAmt):
+            if self.isEnemyGear:
+                velocityY = 10
+            else:
+                velocityX = -10
+
             velocityX = rnd.uniform(-2,2)
-            self.velocity = [velocityX,-10]
+            self.velocity = [velocityX,velocityY]
             bulletList.append(Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.pierce))
 
         return bulletList

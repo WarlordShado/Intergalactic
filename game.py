@@ -32,7 +32,6 @@ class Game():
         self.BossFormation = None
 
         self.makeEnemies()
-       
 
     def renderLables(self) -> None: #Renders game labels
         font = pygame.freetype.SysFont("Comic Sans MS",32)
@@ -92,7 +91,6 @@ class Game():
         
     def getBoss(self,x,y,rad) -> Boss: #Obtains a random boss
         rnd = random.randint(1,3)
-        rnd = 3
         match rnd:
             case 1:
                 return Overseer(x,y,rad)
@@ -100,8 +98,10 @@ class Game():
                 return Goliath(x,y,rad)
             case 3:
                 return Rouge(x,y,rad)
+            case 4: 
+                return Teleporter(x,y,rad,self.center * 2)
                 
-    def moveEnemies(self) -> None: #MAKE LESS RANDOM
+    def moveEnemies(self) -> None:
         if not self.isBossRound: 
             self.enemies.update()
         else:
@@ -121,7 +121,6 @@ class Game():
                 if type(item) is not None:
                     self.enemiesBullets.append(item)
                 
-        
         for item in bulletCheck:
             if type(item) is not None:
                 self.enemiesBullets.append(item)
@@ -174,16 +173,12 @@ class Game():
             if not self.isBossRound: #If it isnt a boss round, check if bullets hit the enemies
                 for enemyIndex,target in enumerate(self.enemies.enemyList): #Iterates through all enemies to see if a projectile hit it
                     if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
-                        if self.enemies.enemyList[enemyIndex].hasCoin:
+                        if self.enemies.enemyList[enemyIndex].hasCoin and self.enemies.enemyList[enemyIndex].health - 1 <= 0:
                             self.coins.append(Coin(100,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
                         try:
                             self.enemies.enemyList[enemyIndex].health -= 1
                             if self.enemies.enemyList[enemyIndex].health <= 0:
-                                
-                                if type(self.enemies.enemyList[enemyIndex]) is StrongEnemy:
-                                    self.addScore(300)
-                                else:
-                                    self.addScore(100)
+                                self.addScore(self.enemies.enemyList[enemyIndex].scoreVal)
 
                                 del self.enemies.enemyList[enemyIndex] #Deletes the Enemy
                             if len(self.bullets) != 0: #bullet list is sometimes zero and breaks so this prevents it
@@ -192,7 +187,6 @@ class Game():
                                 else:
                                     bullet.pierce -= 1
                         
-                            
                         except IndexError as ex: #This Shouldn't Fire, Hopefully
                             print(ex)
             else:
