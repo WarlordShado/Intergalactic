@@ -55,8 +55,10 @@ class Boss(Enemy): #Used as a Structure for inheritance
         self.fireRate = 20
         self.specRate = 500
         
+        
     def drawEnemy(self,screen: pygame.Surface) -> None:
         pygame.draw.circle(screen,self.color,(self.x,self.y),self.rad,0)
+        self.enemySprite.getImage(screen,(self.x - self.rad,self.y - self.rad))
         
     def canBeHurt(self) -> bool:
         return True
@@ -69,18 +71,6 @@ class Boss(Enemy): #Used as a Structure for inheritance
     
     def getName(self):
         return self.name
-        
-    def changeColor(self) -> None:
-        if self.health // 5 == 5:
-            self.color = (255,0,127)
-        elif self.health // 5 == 4:
-            self.color = (127,0,127)
-        elif self.health // 5 == 3:
-            self.color = (0,0,127)
-        elif self.health // 5 == 2:
-            self.color = (127,0,255) 
-        elif self.health // 5 == 1:
-            self.color = (0,0,255)
             
 class Goliath(Boss):
     def __init__(self,xPos:float,yPos:float,rad:int) -> None:
@@ -92,6 +82,7 @@ class Goliath(Boss):
         self.gear =  DoubleShot(True) 
         self.fireRate = 40
         self.specRate = 250
+        self.enemySprite = Sprite("sprites\Goliath.png",60,60)
         
     def special(self) -> None:
         if self.health < self.maxHp:
@@ -108,9 +99,10 @@ class Teleporter(Boss):
         self.gear = MachineGun(True)
         self.fireRate = 40
         self.specRate = 75
+        self.enemySprite = Sprite("sprites\Telefrag.png",60,60)
         
     def special(self) -> None:
-        getLoc = rnd.randint(self.rad,self.scrWidth - self.rad)
+        getLoc = rnd.randint(int(self.rad),int(self.scrWidth - self.rad))
         self.x = getLoc
 
 class Overseer(Boss):
@@ -123,6 +115,7 @@ class Overseer(Boss):
         self.minionList = []
         self.gear = Gear(True)
         self.fireRate = 50
+        self.enemySprite = Sprite("sprites\Hive.png",60,60)
             
     def canBeHurt(self) -> bool:
         if len(self.minionList) == 0:
@@ -139,6 +132,7 @@ class Rouge(Boss):
         self.gear = TripleShot(True)
         self.fireRate = 30
         self.specRate = 100
+        self.enemySprite = Sprite("sprites\Rouge.png",60,60)
         
     def special(self, screen:pygame.Surface) -> list:
         return [KillBullet(self.getX(),self.getY() + self.rad,25,[0,7.5])]
@@ -149,11 +143,4 @@ class Minion(Boss): #Boss Minion, They can't move
         super().__init__(xPos,yPos,rad)
         self.health = 3
         self.fireRate = 250
-        
-    def changeColor(self) -> None:
-        if self.health == 3:
-            self.color = (34,132,34)
-        elif self.health == 2:
-            self.color = (50,205,50) 
-        elif self.health == 1:
-            self.color = (125,251,125)
+        self.enemySprite = Sprite("sprites\Minion.png",30,30)

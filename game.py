@@ -124,7 +124,7 @@ class Game():
             if type(item) is not None:
                 self.enemiesBullets.append(item)
             
-    def checkCollisonCircle(self,Coords1:[],Coords2:[],Rad1:int,Rad2:int) -> bool: #Checks if 2 circles collided
+    def checkCollisonCircle(self,Coords1:list,Coords2:list,Rad1:int,Rad2:int) -> bool: #Checks if 2 circles collided
         #find the distance between the 2 center points of the circles
         distance = math.sqrt(math.pow(Coords1[0] - Coords2[0],2) + math.pow(Coords1[1] - Coords2[1],2))
 

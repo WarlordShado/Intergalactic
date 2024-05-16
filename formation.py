@@ -51,7 +51,6 @@ class BossFormation(Formation):
         self.Boss = BossType
         
     def drawEnemies(self, win: Surface) -> None:
-        self.Boss.changeColor()
         self.Boss.drawEnemy(win)
         
     def enemyShoot(self) -> Bullet:
@@ -93,11 +92,9 @@ class HiveFormation(BossFormation):
         self.enemySpacing = 120
         
     def drawEnemies(self, win: Surface) -> None:
-        self.Boss.changeColor()
         self.Boss.drawEnemy(win)
         
         for item in self.Boss.minionList:
-             item.changeColor()
              item.drawEnemy(win)
              
     def createFormation(self,center) -> None:
