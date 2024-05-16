@@ -13,6 +13,7 @@ class Enemy():
         self.gear = Gear(True)
         self.fireRate = 500
         self.enemySprite = Sprite("sprites\Enemy.png",30,30)
+        self.health = 1
         
     def drawEnemy(self,screen:pygame.Surface) -> None:
         pygame.draw.circle(screen,(0,0,0),(self.x,self.y),self.rad,0)
@@ -40,6 +41,12 @@ class Enemy():
     
     def getY(self) -> float:
         return self.y
+    
+class StrongEnemy(Enemy):
+    def __init__(self,xPos:float,yPos:float,rad:int,hasCoin:bool) -> None:
+        super().__init__(xPos,yPos,rad,hasCoin)
+        self.enemySprite = Sprite("sprites\StrongEnemy.png",30,30)
+        self.health = 3
     
 class Boss(Enemy): #Used as a Structure for inheritance
     def __init__(self,xPos:float,yPos:float,rad:int) -> None:
@@ -91,8 +98,7 @@ class Goliath(Boss):
         
     def special(self) -> None:
         if self.health < self.maxHp:
-            self.health += 1
-        return None
+            self.health += 3
 
 class Overseer(Boss):
     def __init__(self,xPos:float,yPos:float,rad:int) -> None:
@@ -103,11 +109,7 @@ class Overseer(Boss):
         self.name = "Hive Mind"
         self.minionList = []
         self.gear = Gear(True)
-        self.fireRate = 20
-
-    def startSpecial(self, screen: pygame.Surface) -> None:
-        for i in range(1,6):
-            self.minionList.append(Minion(100 * i + 1,175,15))
+        self.fireRate = 50
             
     def canBeHurt(self) -> bool:
         if len(self.minionList) == 0:

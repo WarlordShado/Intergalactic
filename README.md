@@ -12,7 +12,7 @@ add enemy spawn patterns
 
 Ship Types
 
-more boss and gear types
+more boss and gear
 
 Upgrades
 
