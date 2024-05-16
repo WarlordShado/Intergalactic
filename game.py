@@ -26,6 +26,7 @@ class Game():
         self.startGame = False
         self.round = 1
         self.gearSelectNum = 0
+        self.font = pygame.freetype.Font("PixelifySans-VariableFont_wght.ttf",32)
         
         self.isBossRound = False
         self.BossFormation = None
@@ -33,16 +34,15 @@ class Game():
         self.makeEnemies()
 
     def renderLables(self) -> None: #Renders game labels
-        font = pygame.freetype.SysFont("Comic Sans MS",32)
-        font.render_to(self.win,(5,5),"Score: " + str(self.score),(255,255,255))
+      
+        self.font.render_to(self.win,(5,5),"Score: " + str(self.score),(255,255,255))
         
-        font.render_to(self.win,(350,5),"Multiplier: X" + str(round(self.player.getScoreMultiplyer(),1)),(255,255,255))
+        self.font.render_to(self.win,(350,5),"Multiplier: X" + str(round(self.player.getScoreMultiplyer(),1)),(255,255,255))
         
-        font.render_to(self.win,(5,820),"Health: " + str(self.player.health) + "/5",(255,255,255))
+        self.font.render_to(self.win,(5,820),"Health: " + str(self.player.health) + "/5",(255,255,255))
         
         if self.isBossRound:
-            font = pygame.freetype.SysFont("Comic Sans MS",32)
-            font.render_to(self.win,(150,47), self.BossFormation.Boss.getName() + " Health: " + str(self.BossFormation.Boss.health) + "/" + str(self.BossFormation.Boss.maxHp),(255,0,0))
+            self.font.render_to(self.win,(150,47), self.BossFormation.Boss.getName() + " Health: " + str(self.BossFormation.Boss.health) + "/" + str(self.BossFormation.Boss.maxHp),(255,0,0))
         
     def addScore(self,scoreAmt:int) -> None: #Adds points to the player's score
         self.score += math.floor(scoreAmt * self.player.getScoreMultiplyer())
@@ -144,9 +144,8 @@ class Game():
         self.renderCenterText("Hit R to Change!",(255,255,255),175)
     
     def renderCenterText(self,text:str,rgb:(),offset:int = 0,fontSize: int = 28) -> None: #Function that renders labels at the center
-        font = pygame.freetype.SysFont("Comic Sans MS",fontSize)
-        fontWidth = font.get_rect(text)
-        font.render_to(self.win,(self.center - fontWidth.width / 2,(self.height / 3) + offset),text,rgb)
+        fontWidth = self.font.get_rect(text)
+        self.font.render_to(self.win,(self.center - fontWidth.width / 2,(self.height / 3) + offset),text,rgb)
 
     def gearSelect(self) -> None: #Allows the player to select gear
         self.gearSelectNum += 1
