@@ -1,5 +1,6 @@
 import pygame
 from game import *
+from sprite import *
 
 BLACK = (0,0,0)
 WIDTH = 600.0
@@ -11,6 +12,7 @@ def main() -> None:
     clock = pygame.time.Clock();
     currentTime = 0
     prevTime = 0
+    bg = Sprite("sprites\Background.png",WIDTH,HEIGHT)
     
     exit = False
     
@@ -18,6 +20,7 @@ def main() -> None:
 
     while not exit:
         events = pygame.event.get()
+        bg.getImage(screen,(0,0))
 
         for event in events :
             if event.type == pygame.QUIT:
@@ -46,6 +49,7 @@ def main() -> None:
         else:
             game.GameOver()
             
+       
         pygame.display.update()
         screen.fill(BLACK)
         clock.tick(60)

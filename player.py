@@ -33,8 +33,12 @@ class Player():
         return (self.totalBossTokens * 0.1) + 1
 
     def drawPlayer(self,screen:pygame.Surface) -> None:
-        pygame.draw.circle(screen,self.playerColor,(self.x,self.y),self.rad,0)
+        hitboxSurface = pygame.Surface((self.x - self.rad,self.y-self.rad))
+        hitboxSurface.set_colorkey((0,0,0))
+        hitboxSurface.set_alpha(0)
+        pygame.draw.circle(hitboxSurface,self.playerColor,(self.x,self.y),self.rad,0)
         self.playerSprite.getImage(screen,(self.x - self.rad,self.y-self.rad))
+        screen.blit(hitboxSurface,(self.x - self.rad,self.y-self.rad))
        
     def getRad(self) -> float:
         return self.rad

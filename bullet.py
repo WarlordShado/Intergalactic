@@ -29,6 +29,7 @@ class Bullet():
         pygame.draw.circle(screen,self.bulletColor,(self.pos.x,self.pos.y),self.rad,0)
         if not self.rad > 10:
             self.bulletImage.getImage(screen,(self.pos.x - self.rad,self.pos.y - self.rad))
+
         
     def update(self) -> None:
         pass

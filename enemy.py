@@ -17,8 +17,12 @@ class Enemy():
         self.scoreVal = 100
         
     def drawEnemy(self,screen:pygame.Surface) -> None:
-        pygame.draw.circle(screen,(0,0,0),(self.x,self.y),self.rad,0)
+        hitboxSurface = pygame.Surface((self.x - self.rad,self.y-self.rad))
+        hitboxSurface.set_colorkey((0,0,0))
+        hitboxSurface.set_alpha(0)
+        pygame.draw.circle(hitboxSurface,(0,0,0),(self.x,self.y),self.rad,0)
         self.enemySprite.getImage(screen,(self.x - self.rad,self.y - self.rad))
+        screen.blit(hitboxSurface,(self.x - self.rad,self.y-self.rad))
         
     def moveEnemy(self) -> None:
         self.x += self.speed
@@ -54,11 +58,6 @@ class Boss(Enemy): #Used as a Structure for inheritance
         self.name = ""
         self.fireRate = 20
         self.specRate = 500
-        
-        
-    def drawEnemy(self,screen: pygame.Surface) -> None:
-        pygame.draw.circle(screen,self.color,(self.x,self.y),self.rad,0)
-        self.enemySprite.getImage(screen,(self.x - self.rad,self.y - self.rad))
         
     def canBeHurt(self) -> bool:
         return True

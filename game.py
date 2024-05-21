@@ -138,7 +138,7 @@ class Game():
         self.renderCenterText("Click to Restart",(255,255,255),100)
          
     def StartScreen(self) -> None: #Renders labels at the start
-        self.renderCenterText("Intergalatic",(0,255,255),-100,64)
+        self.renderCenterText("Intergalatic",(0,128,255),-100,128)
         self.renderCenterText("Click to Start!",(255,255,255),35)
         self.renderCenterText("Selected Gear: " + self.player.gear.getName(),(255,255,255),125)
         self.renderCenterText("Hit R to Change!",(255,255,255),175)
