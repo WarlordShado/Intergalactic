@@ -1,6 +1,6 @@
 import pygame
-from game import *
-from sprite import *
+from game import Game
+from sprite import Sprite
 
 BLACK = (0,0,0)
 WIDTH = 600.0

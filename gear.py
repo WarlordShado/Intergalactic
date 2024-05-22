@@ -1,5 +1,5 @@
 import pygame
-from bullet import *
+from bullet import Bullet, KillBullet
 import random as rnd
 
 class Gear(): #Basic Single Shot

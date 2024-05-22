@@ -1,9 +1,9 @@
 import math
 import pygame
 import pygame.freetype
-import random
-from coin import *
-from player import *
+from random import randint
+from coin import BossToken,Coin
+from player import Player
 from bullet import *
 from enemy import *
 from gear import *
@@ -68,7 +68,7 @@ class Game():
         self.shootState = state
         
     def makeEnemies(self) -> None: #Filles the enemy array
-        rnd = random.randint(1,2)
+        rnd = randint(1,2)
         match rnd:
             case 1:
                 self.enemies = SquareForm(self.center * 2,self.height)
@@ -89,7 +89,7 @@ class Game():
             
         
     def getBoss(self,x,y,rad) -> Boss: #Obtains a random boss
-        rnd = random.randint(1,4)
+        rnd = randint(1,4)
         match rnd:
             case 1:
                 return Overseer(x,y,rad)

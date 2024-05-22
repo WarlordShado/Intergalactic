@@ -1,5 +1,5 @@
 import pygame
-from sprite import *
+from sprite import Sprite
 
 class Coin:
     def __init__(self,value: int,startX: float,startY:float,rad:int):

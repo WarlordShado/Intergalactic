@@ -1,7 +1,8 @@
 import pygame
-from sprite import *
-from bullet import *
-from gear import *
+from sprite import Sprite
+from bullet import Bullet, KillBullet
+from gear import Gear, TripleShot, MachineGun, DoubleShot
+from random import randint as rnd
 
 class Enemy():
     def __init__(self,xPos:float,yPos:float,rad:int,hasCoin:bool) -> None:

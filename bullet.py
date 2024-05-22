@@ -1,6 +1,5 @@
 import pygame
-from sprite import *
-import math
+from sprite import Sprite
 
 class Bullet():
     def __init__(self,xpos:float,ypos:float,rad:int,velocity:list,pierce:int = 0,isSniper:bool = False):

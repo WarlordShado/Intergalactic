@@ -1,8 +1,8 @@
 import pygame
 from pygame.surface import Surface
 from enemy import *
-from bullet import *
-import random as rnd
+from bullet import Bullet
+from random import randint
 
 class Formation(): #Template
     def __init__(self,screenWidth:float,screenHeight:float) -> None:
@@ -24,7 +24,7 @@ class Formation(): #Template
         bulletList = []
         
         for enemy in self.enemyList:
-            rndShoot = rnd.randint(0,enemy.fireRate)
+            rndShoot = randint(0,enemy.fireRate)
             if rndShoot == 10:
                 bulletCheck = enemy.shoot()
                 for item in bulletCheck:
@@ -56,7 +56,7 @@ class BossFormation(Formation):
     def enemyShoot(self) -> Bullet:
         bulletList = []
 
-        rndShoot = rnd.randint(0,self.Boss.fireRate)
+        rndShoot = randint(0,self.Boss.fireRate)
         if rndShoot == 5:
              bulletCheck = self.Boss.shoot()
              for item in bulletCheck:
@@ -67,7 +67,7 @@ class BossFormation(Formation):
     def useSpecial(self, win: pygame.Surface) -> Bullet:
         bulletAdd = []
 
-        rndSpec = rnd.randint(0,self.Boss.specRate)
+        rndSpec = randint(0,self.Boss.specRate)
         if rndSpec == self.Boss.specRate // 2:
              if type(self.Boss) is Rouge:
                  
@@ -113,13 +113,13 @@ class HiveFormation(BossFormation):
         bulletList = []
         if len(self.Boss.minionList) > 0:
             for enemy in self.Boss.minionList:
-                rndShoot = rnd.randint(0,enemy.fireRate)
+                rndShoot = randint(0,enemy.fireRate)
                 if rndShoot == 10:
                     bulletCheck = enemy.shoot()
                     for item in bulletCheck:
                         bulletList.append(item)
         else:
-            rndShoot = rnd.randint(0,self.Boss.fireRate)
+            rndShoot = randint(0,self.Boss.fireRate)
             if rndShoot == 10:
                 bulletList = self.Boss.shoot()
                 
@@ -158,7 +158,7 @@ class SquareForm(Formation):
 
         for i in range(25):
             hasCoin = False
-            checkCoin = rnd.randint(0,15)
+            checkCoin = randint(0,15)
             
             if checkCoin == 1:
                 hasCoin = True
@@ -185,7 +185,7 @@ class DiamondForm(Formation):
         
         for i in range(4): #Makes the Inner Diamond
             hasCoin = False
-            checkCoin = rnd.randint(0,15)
+            checkCoin = randint(0,15)
             
             if checkCoin == 1:
                 hasCoin = True
@@ -207,7 +207,7 @@ class DiamondForm(Formation):
         
         for i in range(8):
             hasCoin = False
-            checkCoin = rnd.randint(0,15)
+            checkCoin = randint(0,15)
             
             if checkCoin == 1:
                 hasCoin = True
