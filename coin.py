@@ -33,4 +33,9 @@ class BossToken(Coin):
     def __init__(self,value: int,startX:float,startY:float,rad:int):
         super().__init__(value,startX,startY,rad)
         self.coinSprite = Sprite("sprites\BossToken.png",30,30)
+
+class UpgradeToken(Coin):
+    def __init__(self,value: int,startX:float,startY:float,rad:int):
+        super().__init__(value,startX,startY,rad)
+        self.coinSprite = Sprite("sprites/UpgradeToken.png",30,30)
         

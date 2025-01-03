@@ -12,6 +12,7 @@ class Gear(): #Basic Single Shot
         self.fireRate = fireRate
         self.dmg = damage
         self.pierce = pierce
+        self.maxFire = fireRate - (fireRate * 0.75)
         
     def handleVelo(self,isForEnemy: bool,bulletSpeed) -> None:
         if isForEnemy:
@@ -28,10 +29,13 @@ class Gear(): #Basic Single Shot
     def getFireRate(self) -> int:
         return self.fireRate
     
+    def upgrade(self,tokenAmt) -> None:
+        self.dmg += 1 if tokenAmt % 3 == 0 else 0
+        self.fireRate -= 10 if tokenAmt % 5 == 0 and self.fireRate >= self.maxFire else 0
 
 class DoubleShot(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
-        super().__init__(isForEnemy,2,fireRate=400,damage=2)
+        super().__init__(isForEnemy,2,fireRate=300,damage=3)
         self.name = "Twin Strike"
         self.bulletSpacing = 20
         
@@ -46,7 +50,7 @@ class DoubleShot(Gear):
         
 class TripleShot(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
-        super().__init__(isForEnemy,5,fireRate=425,damage=2)
+        super().__init__(isForEnemy,5,fireRate=400,damage=2)
         self.name = "Fusillade"
         
     def getBulletList(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:

@@ -5,10 +5,11 @@ from bullet import Bullet
 from random import randint
 
 class Formation(): #Template
-    def __init__(self,screenWidth:float,screenHeight:float) -> None:
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
-        self.enemyList = []
+    def __init__(self,screenWidth:float,screenHeight:float,round:int = 1) -> None:
+        self.screenWidth:float = screenWidth
+        self.screenHeight:float = screenHeight
+        self.round:int = round
+        self.enemyList:list = []
         
     def getRandEnemy(self) -> Enemy:
         return self.enemyList[rnd.randint(0,len(self.enemyList) - 1)]
@@ -21,7 +22,7 @@ class Formation(): #Template
             enemy.drawEnemy(win)
     
     def enemyShoot(self) -> Bullet:
-        bulletList = []
+        bulletList:list = []
         
         for enemy in self.enemyList:
             rndShoot = randint(0,enemy.fireRate)
@@ -33,7 +34,7 @@ class Formation(): #Template
         return bulletList
         
     def update(self) -> None:
-        reverseEnemy = False
+        reverseEnemy:bool = False
         for enemy in self.enemyList: #Checks if enemies need to start going the other way
             if enemy.getX() - enemy.rad <= 0 or enemy.getX() + enemy.rad >= self.screenWidth:
                 reverseEnemy = True
@@ -45,16 +46,15 @@ class Formation(): #Template
             enemy.moveEnemy()
     
 class BossFormation(Formation):
-    def __init__(self,screenWidth:float,screenHeight:float,BossType: Boss) -> None:
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
-        self.Boss = BossType
+    def __init__(self,screenWidth:float,screenHeight:float,BossType: Boss,round:int = 1) -> None:
+        super().__init__(screenWidth,screenHeight,round)
+        self.Boss:Boss = BossType
         
     def drawEnemies(self, win: Surface) -> None:
         self.Boss.drawEnemy(win)
         
     def enemyShoot(self) -> Bullet:
-        bulletList = []
+        bulletList:list = []
 
         rndShoot = randint(0,self.Boss.fireRate)
         if rndShoot == 5:
@@ -65,9 +65,9 @@ class BossFormation(Formation):
         return bulletList
     
     def useSpecial(self, win: pygame.Surface) -> Bullet:
-        bulletAdd = []
+        bulletAdd:list = []
 
-        rndSpec = randint(0,self.Boss.specRate)
+        rndSpec:int = randint(0,self.Boss.specRate)
         if rndSpec == self.Boss.specRate // 2:
              if type(self.Boss) is Rouge:
                  
@@ -87,9 +87,9 @@ class BossFormation(Formation):
             self.Boss.reverseSpeed()
             
 class HiveFormation(BossFormation):
-    def __init__(self,screenWidth:float,screenHeight:float,BossType: Overseer) -> None:
-        super().__init__(screenWidth,screenHeight,BossType)
-        self.enemySpacing = 120
+    def __init__(self,screenWidth:float,screenHeight:float,BossType: Overseer,round:int = 1) -> None:
+        super().__init__(screenWidth,screenHeight,BossType,round)
+        self.enemySpacing:int = 120
         
     def drawEnemies(self, win: Surface) -> None:
         self.Boss.drawEnemy(win)
@@ -98,8 +98,8 @@ class HiveFormation(BossFormation):
              item.drawEnemy(win)
              
     def createFormation(self,center) -> None:
-        startX = (center - self.enemySpacing)
-        startY = self.enemySpacing
+        startX:int = (center - self.enemySpacing)
+        startY:int = self.enemySpacing
         
         for i in range(9):
             self.Boss.minionList.append(Minion(startX,startY,15))
@@ -110,7 +110,7 @@ class HiveFormation(BossFormation):
                 startY -= 30
                 
     def enemyShoot(self) -> Bullet:
-        bulletList = []
+        bulletList:list = []
         if len(self.Boss.minionList) > 0:
             for enemy in self.Boss.minionList:
                 rndShoot = randint(0,enemy.fireRate)
@@ -126,7 +126,7 @@ class HiveFormation(BossFormation):
         return bulletList
 
     def update(self) -> None:
-        reverseEnemy = False
+        reverseEnemy:bool = False
         
         if self.Boss.getX() - self.Boss.rad <= 0 or self.Boss.getX() + self.Boss.rad >= self.screenWidth:
             reverseEnemy = True
@@ -147,23 +147,23 @@ class HiveFormation(BossFormation):
         self.Boss.moveEnemy()
 
 class SquareForm(Formation):
-    def __init__(self,screenWidth:float,screenHeight:float) -> None:
-        super().__init__(screenWidth,screenHeight)
+    def __init__(self,screenWidth:float,screenHeight:float,round:int = 1) -> None:
+        super().__init__(screenWidth,screenHeight,round)
         self.enemySpacing = 50
         
     def createFormation(self,center) -> None:
-        Count = 0
-        startX = (center - (self.enemySpacing * 2))
-        startY = self.enemySpacing + 25
+        Count:int = 0
+        startX:int = (center - (self.enemySpacing * 2))
+        startY:int = self.enemySpacing + 25
 
         for i in range(25):
-            hasCoin = False
-            checkCoin = randint(0,15)
+            hasCoin:bool = False
+            checkCoin:int = randint(0,15)
             
             if checkCoin == 1:
                 hasCoin = True
             
-            self.enemyList.append(Enemy(startX,startY,15,hasCoin))
+            self.enemyList.append(Enemy(startX,startY,15,hasCoin,self.round))
             #print("(" , startX , "," , startY , ")")
             startX += self.enemySpacing
             if Count >= 4:
@@ -174,14 +174,13 @@ class SquareForm(Formation):
                 Count += 1
                 
 class DiamondForm(Formation):
-    def __init__(self,screenWidth:float,screenHeight:float) -> None:
-        super().__init__(screenWidth,screenHeight)
+    def __init__(self,screenWidth:float,screenHeight:float,round:int = 1) -> None:
+        super().__init__(screenWidth,screenHeight,round)
         self.enemySpacing = 35
         
     def createFormation(self,center) -> None:
-        Count = 0
-        startX = center
-        startY = ((self.enemySpacing * 2) + 135)
+        startX:int = center
+        startY:int = ((self.enemySpacing * 2) + 135)
         
         for i in range(4): #Makes the Inner Diamond
             hasCoin = False
@@ -190,7 +189,7 @@ class DiamondForm(Formation):
             if checkCoin == 1:
                 hasCoin = True
 
-            self.enemyList.append(StrongEnemy(startX,startY,15,hasCoin))
+            self.enemyList.append(StrongEnemy(startX,startY,15,hasCoin,self.round))
             
             if i <= 0:
                 startX += self.enemySpacing
@@ -223,15 +222,3 @@ class DiamondForm(Formation):
                 startY -= self.enemySpacing
             else:
                 startY += self.enemySpacing
-
-
-
-
-        
-    
-                
-    
-                
-
-            
-    

@@ -1,35 +1,35 @@
 import math
-import pygame
-import pygame.freetype
+import pygame as PyGame
+import pygame.freetype as PyFreeType
 from random import randint
-from coin import BossToken,Coin
 from player import Player
+from coin import *
 from bullet import *
 from enemy import *
 from gear import *
 from formation import *
 
 class Game():
-    def __init__(self,screen:pygame.Surface,center:float,height:float) -> None:
-        self.SCREENCENTER = center
-        self.win = screen
-        self.player = Player(center,height - 75,25) #Sets the player to spawn in the center of the screen towards the bottom
-        self.height = height
-        self.center = center
-        self.bullets = []
-        self.enemies = Formation(self.center * 2,self.height)
-        self.enemiesBullets = []
-        self.coins = []
-        self.shootState = True
-        self.score = 0
-        self.gameOver = False
-        self.startGame = False
-        self.round = 1
-        self.gearSelectNum = 0
-        self.font = pygame.freetype.Font("PixelifySans-VariableFont_wght.ttf",32)
+    def __init__(self,screen:PyGame.Surface,center:float,height:float) -> None:
+        self.SCREENCENTER:float = center
+        self.win:Surface = screen
+        self.player:Player = Player(center,height - 75,25) #Sets the player to spawn in the center of the screen towards the bottom
+        self.height:float = height
+        self.center:float = center
+        self.bullets:list = []
+        self.enemies:Formation = Formation(self.center * 2,self.height)
+        self.enemiesBullets:list = []
+        self.coins:list = []
+        self.shootState:bool = True
+        self.score:int = 0
+        self.gameOver:bool = False
+        self.startGame:bool = False
+        self.round:int = 1
+        self.gearSelectNum:int = 0
+        self.font = PyFreeType.Font("PixelifySans-VariableFont_wght.ttf",32)
         
-        self.isBossRound = False
-        self.BossFormation = None
+        self.isBossRound:bool = False
+        self.BossFormation:BossFormation = None
 
         self.makeEnemies()
 
@@ -39,7 +39,7 @@ class Game():
         
         self.font.render_to(self.win,(350,5),"Multiplier: X" + str(round(self.player.getScoreMultiplyer(),1)),(255,255,255))
         
-        self.font.render_to(self.win,(5,820),"Health: " + str(self.player.health) + "/5",(255,255,255))
+        self.font.render_to(self.win,(5,820),"Health: " + str(self.player.health) + "/" + str(self.player.maxHealth),(255,255,255))
         
         if self.isBossRound:
             self.font.render_to(self.win,(150,47), self.BossFormation.Boss.getName() + " Health: " + str(self.BossFormation.Boss.health) + "/" + str(self.BossFormation.Boss.maxHp),(255,0,0))
@@ -48,16 +48,16 @@ class Game():
         self.score += math.floor(scoreAmt * self.player.getScoreMultiplyer())
         
     def handleInput(self) -> None: #Self Explanatory
-        keys = pygame.key.get_pressed()
+        keys:list = PyGame.key.get_pressed()
 
-        if keys[pygame.K_LEFT]:
+        if keys[PyGame.K_LEFT]:
             self.player.movePlayer(-5)
                
-        if keys[pygame.K_RIGHT]:
+        if keys[PyGame.K_RIGHT]:
             self.player.movePlayer(5)
             
-        if keys[pygame.K_UP] and self.shootState: 
-            bulletAdd = []
+        if keys[PyGame.K_UP] and self.shootState: 
+            bulletAdd:list = []
             bulletAdd = self.player.shoot()
                 
             for bullet in bulletAdd:
@@ -68,37 +68,37 @@ class Game():
         self.shootState = state
         
     def makeEnemies(self) -> None: #Filles the enemy array
-        rnd = randint(1,2)
+        rnd:int = randint(1,2)
         match rnd:
             case 1:
-                self.enemies = SquareForm(self.center * 2,self.height)
+                self.enemies = SquareForm(self.center * 2,self.height,self.round)
             case 2:
-                self.enemies = DiamondForm(self.center * 2,self.height)
+                self.enemies = DiamondForm(self.center * 2,self.height,self.round)
 
         self.enemies.createFormation(self.center)
                 
     def makeBoss(self) -> None: #Creates the boss object
-        startX = self.SCREENCENTER
-        startY = 125
-        BossType = self.getBoss(startX,startY,30)
+        startX:int = self.SCREENCENTER
+        startY:int = 125
+        BossType:Boss = self.getBoss(startX,startY,30,)
         if type(BossType) is Overseer:
-            self.BossFormation = HiveFormation(self.center * 2,self.height,BossType)
+            self.BossFormation = HiveFormation(self.center * 2,self.height,BossType,self.round)
             self.BossFormation.createFormation(self.center)
         else:
-            self.BossFormation = BossFormation(self.center * 2,self.height,BossType)
+            self.BossFormation = BossFormation(self.center * 2,self.height,BossType,self.round)
             
         
     def getBoss(self,x,y,rad) -> Boss: #Obtains a random boss
-        rnd = randint(1,4)
+        rnd:int = randint(1,4)
         match rnd:
             case 1:
-                return Overseer(x,y,rad)
+                return Overseer(x,y,rad,self.round)
             case 2:
-                return Goliath(x,y,rad)
+                return Goliath(x,y,rad,self.round)
             case 3:
-                return Rouge(x,y,rad)
+                return Rouge(x,y,rad,self.round)
             case 4: 
-                return Teleporter(x,y,rad,self.center * 2)
+                return Teleporter(x,y,rad,self.center * 2,self.round)
                 
     def moveEnemies(self) -> None:
         if not self.isBossRound: 
@@ -107,14 +107,13 @@ class Game():
             self.BossFormation.update()
                
     def enemyShoot(self) -> None: #Spawns the enemy bullets and activates boss specials
-        bulletAdd = []
-        bulletCheck = []
+        bulletCheck:list = []
 
         if not self.isBossRound:
             bulletCheck = self.enemies.enemyShoot()
         else:
             bulletCheck = self.BossFormation.enemyShoot()
-            specCheck = self.BossFormation.useSpecial(self.win)
+            specCheck:list = self.BossFormation.useSpecial(self.win)
             
             for item in specCheck:
                 if type(item) is not None:
@@ -126,7 +125,7 @@ class Game():
             
     def checkCollisonCircle(self,Coords1:list,Coords2:list,Rad1:int,Rad2:int) -> bool: #Checks if 2 circles collided
         #find the distance between the 2 center points of the circles
-        distance = math.sqrt(math.pow(Coords1[0] - Coords2[0],2) + math.pow(Coords1[1] - Coords2[1],2))
+        distance:float = math.sqrt(math.pow(Coords1[0] - Coords2[0],2) + math.pow(Coords1[1] - Coords2[1],2))
 
         if distance <= Rad1+Rad2: #Checks if they are colliding
             return True
@@ -143,8 +142,8 @@ class Game():
         self.renderCenterText("Selected Gear: " + self.player.gear.getName(),(255,255,255),125)
         self.renderCenterText("Hit R to Change!",(255,255,255),175)
     
-    def renderCenterText(self,text:str,rgb:(),offset:int = 0,fontSize: int = 28) -> None: #Function that renders labels at the center
-        fontWidth = self.font.get_rect(text)
+    def renderCenterText(self,text:str,rgb:tuple,offset:int = 0,fontSize: int = 28) -> None: #Function that renders labels at the center
+        fontWidth:int = self.font.get_rect(text)
         self.font.render_to(self.win,(self.center - fontWidth.width / 2,(self.height / 3) + offset),text,rgb)
 
     def gearSelect(self) -> None: #Allows the player to select gear
@@ -172,7 +171,13 @@ class Game():
                 for enemyIndex,target in enumerate(self.enemies.enemyList): #Iterates through all enemies to see if a projectile hit it
                     if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
                         if self.enemies.enemyList[enemyIndex].hasCoin and self.enemies.enemyList[enemyIndex].health - 1 <= 0:
-                            self.coins.append(Coin(100,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
+                            rndUpgrade = randint(1,3)
+                            if rndUpgrade == 3:
+                                self.coins.append(UpgradeToken(200,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
+                            else:
+                                self.coins.append(Coin(100,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
+
+                            
                         try:
                             self.enemies.enemyList[enemyIndex].health -= 1
                             if self.enemies.enemyList[enemyIndex].health <= 0:
@@ -213,6 +218,7 @@ class Game():
     def killBoss(self):
         self.addScore(1500)
         self.coins.append(BossToken(500,self.BossFormation.Boss.getX(),self.BossFormation.Boss.getY(),15)) #Adds a boss token to the coin list
+        self.player.upgrade()
         self.BossFormation.Boss = None 
         self.isBossRound = False
 
@@ -244,6 +250,8 @@ class Game():
                 if self.checkCollisonCircle([self.player.getX(),self.player.getY()],[coin.getX(),coin.getY()],self.player.getRad(),coin.getRad()):
                     if type(coin) is BossToken:
                         self.player.totalBossTokens += 1
+                    elif type(coin) is UpgradeToken:
+                        self.player.upgrade()
 
                     self.addScore(coin.getVal())
                     del self.coins[coinIndex]
