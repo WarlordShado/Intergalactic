@@ -80,7 +80,7 @@ class Game():
     def makeBoss(self) -> None: #Creates the boss object
         startX:int = self.SCREENCENTER
         startY:int = 125
-        BossType:Boss = self.getBoss(startX,startY,30,)
+        BossType:Boss = self.getBoss(startX,startY,30)
         if type(BossType) is Overseer:
             self.BossFormation = HiveFormation(self.center * 2,self.height,BossType,self.round)
             self.BossFormation.createFormation(self.center)
@@ -90,6 +90,7 @@ class Game():
         
     def getBoss(self,x,y,rad) -> Boss: #Obtains a random boss
         rnd:int = randint(1,4)
+        
         match rnd:
             case 1:
                 return Overseer(x,y,rad,self.round)
@@ -98,7 +99,7 @@ class Game():
             case 3:
                 return Rouge(x,y,rad,self.round)
             case 4: 
-                return Teleporter(x,y,rad,self.center * 2,self.round)
+                return Teleporter(x,y,rad,self.win.get_width(),self.round)
                 
     def moveEnemies(self) -> None:
         if not self.isBossRound: 
@@ -159,8 +160,6 @@ class Game():
                 self.player.gear = MachineGun()
             case 5:
                 self.player.gear = Sniper()
-            case 6:
-                self.player.gear = BlackHole()
                 self.gearSelectNum = 0 #Resets the match case
 
     def moveBullets(self) -> None:

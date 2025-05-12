@@ -2,6 +2,8 @@ import pygame
 from bullet import Bullet, KillBullet
 import random as rnd
 
+#FIX BULLET SPRITES!!!!!!!!!!!!!!!
+
 class Gear(): #Basic Single Shot
     def __init__(self,isForEnemy: bool = False,bulletAmt: int = 1,radius:int = 5,fireRate: int = 200, damage: int = 3,pierce: int = 0,bulletSpeed: int = 10) -> None:
         self.bulletAmt = bulletAmt
@@ -13,6 +15,7 @@ class Gear(): #Basic Single Shot
         self.dmg = damage
         self.pierce = pierce
         self.maxFire = fireRate - (fireRate * 0.75)
+        self.bulletSprite = ("sprites\BasicBullet.png",10,10) if not isForEnemy else ("sprites\EnemyBullet.png",10,10)
         
     def handleVelo(self,isForEnemy: bool,bulletSpeed) -> None:
         if isForEnemy:
@@ -24,7 +27,7 @@ class Gear(): #Basic Single Shot
         return self.name
     
     def getBulletList(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:
-        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity)]
+        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.bulletSprite)]
     
     def getFireRate(self) -> int:
         return self.fireRate
@@ -44,7 +47,7 @@ class DoubleShot(Gear):
         playerPosX -= self.bulletSpacing//2
 
         for i in range(self.bulletAmt):
-            bulletList.append(Bullet(playerPosX + (i * self.bulletSpacing),playerPosY - playerRad,self.radius,self.velocity))
+            bulletList.append(Bullet(playerPosX + (i * self.bulletSpacing),playerPosY - playerRad,self.radius,self.velocity,self.bulletSprite))
             
         return bulletList
         
@@ -63,7 +66,7 @@ class TripleShot(Gear):
 
         for i in range(self.bulletAmt):
             self.velocity = [velocityX,velocityY]
-            bulletList.append(Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity))
+            bulletList.append(Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.bulletSprite))
             velocityX += 1
             
         return bulletList
@@ -83,7 +86,7 @@ class MachineGun(Gear):
         for i in range(self.bulletAmt):
             velocityX = rnd.uniform(-2,2)
             self.velocity = [velocityX,velocityY]
-            bulletList.append(Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.pierce))
+            bulletList.append(Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.bulletSprite,self.pierce))
 
         return bulletList
     
@@ -91,9 +94,10 @@ class Sniper(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
         super().__init__(isForEnemy,1,7,900,7,2,25)
         self.name = "Sniper"
+        self.bulletSprite = ("sprites\SniperRound.png",14,14)
         
     def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float) -> list:
-        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.pierce,True)]
+        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.bulletSprite,self.pierce)]
     
 class BlackHole(Gear):
     def __init__(self,isForEnemy: bool = False) -> None:
@@ -101,7 +105,7 @@ class BlackHole(Gear):
         self.name = "Black Hole"
         
     def getBulletList(self,playerPosX:float,playerPosY:float,playerRad:float) -> list:
-        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.pierce)]
+        return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.bulletSprite,self.pierce)]
         
 
 

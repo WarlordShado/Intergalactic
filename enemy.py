@@ -50,7 +50,7 @@ class StrongEnemy(Enemy):
     def __init__(self,xPos:float,yPos:float,rad:int,hasCoin:bool,round:int = 1) -> None:
         super().__init__(xPos,yPos,rad,hasCoin)
         self.enemySprite = Sprite("sprites\StrongEnemy.png",30,30)
-        self.healthFunc = lambda health: health if round <= ROUND_MOD else health + (int(round / ROUND_MOD) * 2)
+        self.healthFunc = lambda health: health if round <= ROUND_MOD else health + (int(round / ROUND_MOD) * 1.5)
         self.health = self.healthFunc(3)
         self.scoreVal = 300
     
@@ -74,7 +74,7 @@ class Boss(Enemy): #Used as a Structure for inheritance
     def special(self) -> None:
         return None
     
-    def getName(self):
+    def getName(self) -> str:
         return self.name
             
 class Goliath(Boss):
@@ -93,7 +93,7 @@ class Goliath(Boss):
         if self.health < self.maxHp:
             self.health += 3
 
-class Teleporter(Boss):
+class Teleporter(Boss): #I hate this thing. Fix it. Teleport is breaking it. IDK why
     def __init__(self,xPos:float,yPos:float,rad:int,scrWidth:int,round:int = 1) -> None:
         super().__init__(xPos,yPos,rad,round)
         self.scrWidth = scrWidth
@@ -107,7 +107,7 @@ class Teleporter(Boss):
         self.enemySprite = Sprite("sprites\Telefrag.png",60,60)
         
     def special(self) -> None:
-        getLoc = rnd(int(self.rad),int(self.scrWidth - self.rad))
+        getLoc = rnd(int(self.rad*2),int(self.scrWidth - (self.rad*2)))
         self.x = getLoc
 
 class Overseer(Boss):
@@ -140,9 +140,9 @@ class Rouge(Boss):
         self.enemySprite = Sprite("sprites\Rouge.png",60,60)
         
     def special(self, screen:pygame.Surface) -> list:
-        return [KillBullet(self.getX(),self.getY() + self.rad,velocity=[0,7.5])]
+        return [KillBullet(self.getX(),self.getY() + self.rad,velocity=[0,7.5],bulletSprite=("sprites\KillBullet.png",30,30))]
     
-class Minion(Boss): #Boss Minion, They can't move
+class Minion(Boss):
     def __init__(self,xPos: float,yPos: float,rad: int) -> None:
         super().__init__(xPos,yPos,rad)
         self.health = 3

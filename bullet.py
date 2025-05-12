@@ -2,20 +2,13 @@ import pygame
 from sprite import Sprite
 
 class Bullet():
-    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list,pierce:int = 0,isSniper:bool = False):
-        self.pos = pygame.Vector2([xpos,ypos])
-        self.rad = rad
-        self.velocity = velocity
-        self.pierce = pierce
-        self.bulletColor = (0,0,0)
-
-        if isSniper:
-            self.bulletImage = Sprite("sprites\SniperRound.png",14,14)
-        else:
-            if self.velocity[1] > 1:
-                self.bulletImage = Sprite("sprites\EnemyBullet.png",10,10)
-            else:
-                self.bulletImage = Sprite("sprites\BasicBullet.png",10,10)
+    def __init__(self,xpos:float,ypos:float,rad:int,velocity:list,bullet_sprite:tuple,pierce:int = 0):
+        self.pos : pygame.Vector2 = pygame.Vector2([xpos,ypos])
+        self.rad : int = rad
+        self.velocity : list = velocity
+        self.pierce : int = pierce
+        self.bulletColor : tuple = (0,0,0)
+        self.bulletImage = Sprite(bullet_sprite[0],bullet_sprite[1],bullet_sprite[2])
                 
         if rad > 10:
             self.bulletColor = (255,0,0)
@@ -26,10 +19,9 @@ class Bullet():
         
     def drawBullet(self,screen:pygame.Surface) -> None:
         pygame.draw.circle(screen,self.bulletColor,(self.pos.x,self.pos.y),self.rad,0)
-        if not self.rad > 10:
+        if self.bulletImage != 0:
             self.bulletImage.getImage(screen,(self.pos.x - self.rad,self.pos.y - self.rad))
 
-        
     def update(self) -> None:
         pass
     
@@ -43,10 +35,7 @@ class Bullet():
         return self.pos.y
 
 class KillBullet(Bullet):
-    def __init__(self,xpos:float,ypos:float,rad:int = 15,velocity:list = []) -> None:
-        super().__init__(xpos,ypos,rad,velocity)
-        self.bulletColor = (255,0,0)
-        
-    def drawBullet(self,screen:pygame.Surface) -> None:
-        pygame.draw.circle(screen,self.bulletColor,(self.pos.x,self.pos.y),self.rad,0)
+    def __init__(self,xpos:float,ypos:float,bulletSprite:tuple,rad:int = 15,velocity:list = []) -> None:
+        super().__init__(xpos,ypos,rad,velocity,bulletSprite)
+        self.bulletColor : tuple = (0,0,0)
         
