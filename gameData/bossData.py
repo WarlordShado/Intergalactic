@@ -6,7 +6,7 @@ from gameData.bossSpecs import *
 ROUND_MOD = 5
 
 def No_Spec_Data(self):#Used as a placeholder if a boss or enemy doesnt have extra values
-    pass
+    return []
 
 def Can_Be_Hurt_Always(self):
     return True

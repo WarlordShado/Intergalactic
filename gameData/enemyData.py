@@ -5,7 +5,7 @@ ROUND_MOD = 5
 
 ENEMY_DATA_ARRAY:dict = {
     "Basic_Enemy":{
-        "hp":lambda round:1 + int(round / ROUND_MOD),
+        "hp":lambda round:3 + int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/Enemy.png",
             "width":30,
@@ -18,7 +18,7 @@ ENEMY_DATA_ARRAY:dict = {
         "gear":"SingleShot"
     },
     "Strong_Enemy":{
-        "hp":lambda round:3 + int(round / ROUND_MOD),
+        "hp":lambda round:6 + int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/StrongEnemy.png",
             "width":30,
@@ -32,8 +32,8 @@ ENEMY_DATA_ARRAY:dict = {
     },
     "Overseer_Minion":{
         "name":'Overseer_Minion',
-        "maxHp":lambda round:3 + int(round/ ROUND_MOD),
-        "hp":lambda round:3 + int(round / ROUND_MOD),
+        "maxHp":lambda round:4 + int(round/ ROUND_MOD),
+        "hp":lambda round:4 + int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/Minion.png",
             "width":30,

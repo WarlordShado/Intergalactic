@@ -59,10 +59,10 @@ GEAR_DATA = {
         "name":"Sniper",
         "bulletAmt":1,
         "radius":7,
-        "fireRate":900,
-        "damage":7,
+        "fireRate":750,
+        "damage":6,
         "pierce":2,
-        "velocity":25,
+        "velocity":30,
         "bulletSprite":lambda x:{
             "path":"sprites/SniperRound.png",
             "width":14,

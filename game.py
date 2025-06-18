@@ -146,7 +146,7 @@ class Game():
                             else:
                                 self.coins.append(Coin(100,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
                     try:
-                        self.enemies.enemyList[enemyIndex].health -= 1
+                        self.enemies.enemyList[enemyIndex].health -= self.player.gear.dmg
                         if self.enemies.enemyList[enemyIndex].health <= 0:
                             self.addScore(self.enemies.enemyList[enemyIndex].scoreVal)
 
