@@ -54,17 +54,17 @@ def diamondFormFunc(self,center): #DiamondFormation
 def goliathFormFunc(self,center):
     startX:int = center
     startY:int = 120
-    self.enemyList.append(Boss(startX,startY,30,BOSS_DATA_ARRAY['Goliath']))
+    self.enemyList.append(Boss(startX,startY,30,BOSS_DATA_ARRAY['Goliath'],self.round))
 
 def rougeFormFunc(self,center):
     startX:int = center
     startY:int = 120
-    self.enemyList.append(Boss(startX,startY,30,BOSS_DATA_ARRAY['Rouge']))
+    self.enemyList.append(Boss(startX,startY,30,BOSS_DATA_ARRAY['Rouge'],self.round))
 
 def hiveFormFunc(self,center):
     startX:int = center
     startY:int = 120
-    self.enemyList.append(Boss(startX,startY,30,BOSS_DATA_ARRAY['Overseer']))
+    self.enemyList.append(Boss(startX,startY,30,BOSS_DATA_ARRAY['Overseer'],self.round))
 
     startX = (center - self.enemySpacing)
     startY = self.enemySpacing

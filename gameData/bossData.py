@@ -16,13 +16,14 @@ BOSS_DATA_ARRAY:dict = {
         "name":'Goliath',
         "maxHp":lambda round:50 + int(round/ ROUND_MOD),
         "hp":lambda round:45 + int(round / ROUND_MOD),
+        "xp":lambda round:150 * int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/Goliath.png",
             "width":60,
             "height":60
         },
         "speed":5,
-        "coinOdds":lambda:True if randint(1,5) == 1 else False,
+        "coinOdds":lambda:True,
         "fireRate":40,
         "specRate":250,
         "scoreVal":300,
@@ -34,13 +35,14 @@ BOSS_DATA_ARRAY:dict = {
         "name":'Overseer',
         "maxHp":lambda round:20 + int(round/ ROUND_MOD),
         "hp":lambda round:20 + int(round / ROUND_MOD),
+        "xp":lambda round:100 * int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/Hive.png",
             "width":60,
             "height":60
         },
         "speed":5,
-        "coinOdds":lambda:True if randint(1,5) == 1 else False,
+        "coinOdds":lambda:True,
         "fireRate":40,
         "specRate":250,
         "scoreVal":300,
@@ -52,13 +54,14 @@ BOSS_DATA_ARRAY:dict = {
         "name":'Rouge',
         "maxHp":lambda round:15 + int(round/ ROUND_MOD),
         "hp":lambda round:15 + int(round / ROUND_MOD),
+        "xp":lambda round:100 * int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/Rouge.png",
             "width":60,
             "height":60
         },
         "speed":5,
-        "coinOdds":lambda:True if randint(1,5) == 1 else False,
+        "coinOdds":lambda:True,
         "fireRate":30,
         "specRate":100,
         "scoreVal":300,

@@ -16,12 +16,16 @@ class Gear(): #Basic Single Shot
         spriteDict = gearData["bulletSprite"](isForEnemy)
         self.bulletSprite = (spriteDict["path"],spriteDict["width"],spriteDict["height"])
         self.fireFunc = gearData["fireFunc"]
+        self.lvlFunc = gearData['lvlFunc']
 
     def handleVelo(self,isForEnemy: bool,bulletSpeed) -> None:
         if isForEnemy:
             self.velocity = [0,bulletSpeed]
         else:
             self.velocity = [0,bulletSpeed * -1]
+
+    def lvlGear(self,lvl):
+        self.lvlFunc(self,lvl)
 
     def getName(self) -> str:
         return self.name
@@ -31,7 +35,3 @@ class Gear(): #Basic Single Shot
     
     def getFireRate(self) -> int:
         return self.fireRate
-    
-    def upgrade(self,tokenAmt) -> None:
-        self.dmg += 1 if tokenAmt % 3 == 0 else 0
-        self.fireRate -= 10 if tokenAmt % 5 == 0 and self.fireRate >= self.maxFire else 0

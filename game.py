@@ -136,27 +136,22 @@ class Game():
         
             for enemyIndex,target in enumerate(self.enemies.enemyList): #Iterates through all enemies to see if a projectile hit it
                 if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
-                    if self.enemies.enemyList[enemyIndex].hasCoin and self.enemies.enemyList[enemyIndex].health - 1 <= 0:
-                        if type(self.enemies.enemyList[enemyIndex]) is Boss:
-                            self.coins.append(BossToken(200,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
-                        else:
-                            rndUpgrade = randint(1,3)
-                            if rndUpgrade == 3:
-                                self.coins.append(UpgradeToken(200,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
-                            else:
-                                self.coins.append(Coin(100,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
                     try:
-                        self.enemies.enemyList[enemyIndex].health -= self.player.gear.dmg
-                        if self.enemies.enemyList[enemyIndex].health <= 0:
-                            self.addScore(self.enemies.enemyList[enemyIndex].scoreVal)
-
+                        enemyCheck = self.enemies.enemyList[enemyIndex]
+                        enemyCheck.health -= self.player.gear.dmg
+                        if enemyCheck.health <= 0:
+                            self.addScore(enemyCheck.scoreVal)
+                            self.player.addXP(enemyCheck.xp)
+                            if type(enemyCheck) is Boss:
+                                self.coins.append(BossToken(500,enemyCheck.getX(),enemyCheck.getY(),15))
+                            elif enemyCheck.hasCoin:
+                                self.coins.append(Coin(100,enemyCheck.getX(),enemyCheck.getY(),5))
                             del self.enemies.enemyList[enemyIndex] #Deletes the Enemy
                         if len(self.bullets) != 0: #bullet list is sometimes zero and breaks so this prevents it
                             if bullet.pierce <= 0 or bullet.getY() <= 0:
                                 del self.bullets[bulletIndex] #Deletes the Bullet
                             else:
                                 bullet.pierce -= 1
-                        
                     except IndexError as ex: #This Shouldn't Fire, Hopefully
                         print(ex)
             if bullet.getY() <= 0:
@@ -166,7 +161,6 @@ class Game():
 
     def killBoss(self):
         self.addScore(1500)
-        self.player.upgrade()
         self.isBossRound = False
 
     def moveEnemyBullets(self) -> None: #Moves the enemy projectiles and cheks if they collided with the player
@@ -193,12 +187,9 @@ class Game():
         if len(self.coins) > 0:
             for coinIndex, coin in enumerate(self.coins):
                 coin.moveCoin()
-            
                 if self.checkCollisonCircle([self.player.getX(),self.player.getY()],[coin.getX(),coin.getY()],self.player.getRad(),coin.getRad()):
                     if type(coin) is BossToken:
                         self.player.totalBossTokens += 1
-                    elif type(coin) is UpgradeToken:
-                        self.player.upgrade()
 
                     self.addScore(coin.getVal())
                     del self.coins[coinIndex]

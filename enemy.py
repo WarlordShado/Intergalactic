@@ -19,6 +19,7 @@ class Enemy():
         self.enemySprite = Sprite(data["sprite"]["path"],data["sprite"]["width"],data["sprite"]["height"])
         self.health = data["hp"](round)
         self.scoreVal = data["scoreVal"]
+        self.xp = data['xp'](round)
         
     def drawEnemy(self,screen:pygame.Surface) -> None:
         hitboxSurface = pygame.Surface((self.x - self.rad,self.y-self.rad))

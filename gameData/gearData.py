@@ -20,7 +20,8 @@ GEAR_DATA = {
         "pierce":0,
         "velocity":10,
         "bulletSprite":defBulletSprite,
-        "fireFunc":singleShot
+        "fireFunc":singleShot,
+        "lvlFunc":singleShotLvl
     },
     "DoubleShot":{
         "name":"Twin Strike",
@@ -31,7 +32,8 @@ GEAR_DATA = {
         "pierce":0,
         "velocity":10,
         "bulletSprite":defBulletSprite,
-        "fireFunc":doubleShot
+        "fireFunc":doubleShot,
+        "lvlFunc":doubleShotLvl
     },
     "TripleShot":{
         "name":"Fullisade",
@@ -42,18 +44,20 @@ GEAR_DATA = {
         "pierce":0,
         "velocity":10,
         "bulletSprite":defBulletSprite,
-        "fireFunc":tripleShot
+        "fireFunc":tripleShot,
+        "lvlFunc":tripleShotLvl
     },
     "MachineGun":{
         "name":"MachineGun",
-        "bulletAmt":2,
+        "bulletAmt":1,
         "radius":5,
         "fireRate":125,
         "damage":1,
         "pierce":0,
         "velocity":10,
         "bulletSprite":defBulletSprite,
-        "fireFunc":machineGun
+        "fireFunc":machineGun,
+        "lvlFunc":machineGunLvl
     },
     "Sniper":{
         "name":"Sniper",
@@ -68,6 +72,7 @@ GEAR_DATA = {
             "width":14,
             "height":14
         },
-        "fireFunc":sniper
+        "fireFunc":sniper,
+        "lvlFunc":sniperLvl
     }
 }
