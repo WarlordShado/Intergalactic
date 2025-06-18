@@ -3,6 +3,7 @@ from bullet import *
 from gear import *
 from sprite import *
 from enemy import *
+from gameData.gearData import *
 
 class Player():
     
@@ -15,8 +16,8 @@ class Player():
         self.health = 5
         self.maxHealth = 5
         self.totalBossTokens = 0
-        self.gear = Gear()
-        self.playerSprite = Sprite("sprites\PlayerShip.png",50,50)
+        self.gear = Gear(GEAR_DATA["SingleShot"])
+        self.playerSprite = Sprite("sprites/PlayerShip.png",50,50)
         self.tokens = 0
         
     def movePlayer(self,amt:int) -> None:

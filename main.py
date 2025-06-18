@@ -1,18 +1,15 @@
 import pygame as PyGame
 from game import Game
 from sprite import Sprite
-
-BLACK = (0,0,0)
-WIDTH = 600.0
-HEIGHT = 850.0
+from const import *
 
 def main() -> None:
     PyGame.init()
     screen = PyGame.display.set_mode((WIDTH,HEIGHT))
-    clock = PyGame.time.Clock();
+    clock = PyGame.time.Clock()
     currentTime = 0
     prevTime = 0
-    bg = Sprite("sprites\Background.png",WIDTH,HEIGHT)
+    bg = Sprite("sprites/Background.png",WIDTH,HEIGHT)
     
     exit = False
     

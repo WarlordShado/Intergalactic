@@ -8,7 +8,7 @@ class Coin:
         self.x : float = startX
         self.y : float  = startY
         self.rad : int = rad
-        self.coinSprite : Sprite = Sprite("sprites\Coin.png",10,10)
+        self.coinSprite : Sprite = Sprite("sprites/Coin.png",10,10)
         
     def drawCoin(self,screen: pygame.Surface) -> None:
         pygame.draw.circle(screen,self.color,(self.x,self.y),self.rad,0)
@@ -32,9 +32,9 @@ class Coin:
 class BossToken(Coin):
     def __init__(self,value: int,startX:float,startY:float,rad:int) -> None:
         super().__init__(value,startX,startY,rad)
-        self.coinSprite : Sprite = Sprite("sprites\BossToken.png",30,30)
+        self.coinSprite : Sprite = Sprite("sprites/BossToken.png",30,30)
 
-class UpgradeToken(Coin):
+class UpgradeToken(Coin): #Replace with EXP eventually
     def __init__(self,value: int,startX:float,startY:float,rad:int) -> None:
         super().__init__(value,startX,startY,rad)
         self.coinSprite : Sprite = Sprite("sprites/UpgradeToken.png",30,30)
