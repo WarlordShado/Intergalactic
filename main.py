@@ -1,9 +1,10 @@
 import pygame as PyGame
-from game import Game
 from sprite import Sprite
-from const import *
+import Globals
+from consts import *
 
 def main() -> None:
+    
     PyGame.init()
     screen = PyGame.display.set_mode((WIDTH,HEIGHT))
     clock = PyGame.time.Clock()
@@ -13,7 +14,7 @@ def main() -> None:
     
     exit = False
     
-    game = Game(screen,WIDTH/2,HEIGHT)
+    Globals.init(screen)
 
     while not exit:
         events = PyGame.event.get()
@@ -23,31 +24,31 @@ def main() -> None:
             if event.type == PyGame.QUIT:
                 exit = True
             if event.type == PyGame.MOUSEBUTTONDOWN:
-                if game.gameOver:
-                    game = Game(screen,WIDTH/2,HEIGHT)
-                elif not game.startGame:
-                    game.startGame = True
+                if Globals.game.gameOver:
+                    Globals.init(screen)
+                elif not Globals.game.startGame:
+                    Globals.game.startGame = True
             if event.type == PyGame.KEYDOWN:
                 keys = PyGame.key.get_pressed()
-                if not game.startGame:
+                if not Globals.game.startGame:
                     if keys[PyGame.K_r]:
-                        game.gearSelect()
+                        Globals.game.gearSelect()
                     
         currentTime = PyGame.time.get_ticks() #Staggers firing so it doesnt shoot every frame
-        if currentTime - prevTime > game.player.gear.getFireRate():
+        if currentTime - prevTime > Globals.game.player.gear.getFireRate():
             prevTime = currentTime
-            game.changeShootState(True)
+            Globals.game.changeShootState(True)
 
-        if not game.gameOver and game.startGame:
-            game.handleInput()
-            game.draw()
-        elif not game.startGame:
-            game.StartScreen()
+        if not Globals.game.gameOver and Globals.game.startGame:
+            Globals.game.handleInput()
+            Globals.game.draw()
+        elif not Globals.game.startGame:
+            Globals.game.StartScreen()
         else:
-            game.GameOver()
+            Globals.game.GameOver()
        
         PyGame.display.update()
-        screen.fill(BLACK)
+        screen.fill(Globals.BLACK)
         clock.tick(60)
 
 

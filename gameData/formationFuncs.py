@@ -61,6 +61,21 @@ def rougeFormFunc(self,center):
     startY:int = 120
     self.enemyList.append(Boss(startX,startY,30,BOSS_DATA_ARRAY['Rouge'],self.round))
 
+def teleFormFunc(self,center):
+    startX:int = center
+    startY:int = 120
+    self.enemyList.append(Boss(startX,startY,30,BOSS_DATA_ARRAY['Telefrag'],self.round))
+
+    startX = center-self.enemySpacing
+    startY = 100
+    enemyAmt = 8
+    for i in range(enemyAmt):
+        self.enemyList.append(Enemy(startX,startY,15,ENEMY_DATA_ARRAY["Strong_Enemy"],self.round))
+        startY += 50
+        if i == (enemyAmt//2)-1:
+            startX += self.enemySpacing*2
+            startY = 100
+
 def hiveFormFunc(self,center):
     startX:int = center
     startY:int = 120

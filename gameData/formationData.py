@@ -28,5 +28,10 @@ BOSS_FORMATION_DATA = {
         "name":"Hive Mind",
         "funcName":hiveFormFunc,
         "spacing":120
+    },
+    "TelefragForm":{
+        "name":"Telefrag",
+        "funcName":teleFormFunc,
+        "spacing":150
     }
 }

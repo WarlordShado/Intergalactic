@@ -12,7 +12,8 @@ from gameData.enemyData import *
 from gameData.bossData import *
 from gameData.formationData import *
 from gameData.gearData import *
-from const import HEIGHT
+
+from consts import *
 
 class Game():
     def __init__(self,screen:PyGame.Surface,center:float,height:float) -> None:
@@ -80,6 +81,7 @@ class Game():
 
     def makeBoss(self) -> None: #Creates the boss object
         formChoose = choice(list(BOSS_FORMATION_DATA.items()))
+        #formChoose = BOSS_FORMATION_DATA['TelefragForm']
         self.enemies = Formation(self.center * 2,self.height,formChoose[1],self.round)
         self.enemies.createFormation(self.center)
         
@@ -138,7 +140,7 @@ class Game():
                 if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
                     try:
                         enemyCheck = self.enemies.enemyList[enemyIndex]
-                        enemyCheck.health -= self.player.gear.dmg
+                        enemyCheck.health -= self.player.gear.dmg if type(enemyCheck) is not Boss or enemyCheck.canBeHurt() else 0
                         if enemyCheck.health <= 0:
                             self.addScore(enemyCheck.scoreVal)
                             self.player.addXP(enemyCheck.xp)

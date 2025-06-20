@@ -6,7 +6,7 @@ from random import randint
 from gameData.enemyData import ENEMY_DATA_ARRAY
 from gameData.formationData import *
 from gameData.formationFuncs import *
-from const import WIDTH
+from Globals import *
 
 class Formation(): #Template
     def __init__(self,screenWidth:float,screenHeight:float,formationData:dict,round:int = 1) -> None:

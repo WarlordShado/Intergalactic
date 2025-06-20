@@ -48,7 +48,7 @@ BOSS_DATA_ARRAY:dict = {
         "scoreVal":300,
         "gear":"DoubleShot",
         "special":overseerSpec,
-        "can_be_hurt":Can_Be_Hurt_Always,
+        "can_be_hurt":overseerCanBeHurt,
     },
     "Rouge":{
         "name":'Rouge',
@@ -67,6 +67,25 @@ BOSS_DATA_ARRAY:dict = {
         "scoreVal":300,
         "gear":"TripleShot",
         "special":rougeSpec,
+        "can_be_hurt":Can_Be_Hurt_Always,
+    },
+    "Telefrag":{
+        "name":'Telefrag',
+        "maxHp":lambda round:30 + int(round/ ROUND_MOD),
+        "hp":lambda round:30 + int(round / ROUND_MOD),
+        "xp":lambda round:100 * int(round / ROUND_MOD),
+        "sprite":{
+            "path":"sprites/Telefrag.png",
+            "width":60,
+            "height":60
+        },
+        "speed":5,
+        "coinOdds":lambda:True,
+        "fireRate":75,
+        "specRate":75,
+        "scoreVal":400,
+        "gear":"MachineGun",
+        "special":teleSpec,
         "can_be_hurt":Can_Be_Hurt_Always,
     },
 }
