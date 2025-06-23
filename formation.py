@@ -4,8 +4,8 @@ from enemy import *
 from bullet import Bullet
 from random import randint
 from gameData.enemyData import ENEMY_DATA_ARRAY
+from gameData.bossData import BOSS_DATA_ARRAY
 from gameData.formationData import *
-from gameData.formationFuncs import *
 from Globals import *
 
 class Formation(): #Template
@@ -14,14 +14,32 @@ class Formation(): #Template
         self.screenHeight:float = screenHeight
         self.round:int = round
         self.enemyList:list = []
-        self.formFunc = formationData['funcName']
         self.enemySpacing = formationData['spacing']
+        self.formArr = formationData['formArr']
         
     def getRandEnemy(self) -> Enemy:
         return self.enemyList[rnd.randint(0,len(self.enemyList) - 1)]
     
     def createFormation(self,center) -> None:
-        self.formFunc(self,center)
+        rowLength = len(self.formArr[0])
+        startX = center - ((rowLength/2) * self.enemySpacing)
+        startY = 120
+
+        for row in self.formArr:
+            for key in row:
+                if key == "X":
+                    startX += self.enemySpacing
+                    continue
+                else:
+                    if key in ENEMY_DATA_ARRAY:
+                        self.enemyList.append(Enemy(startX,startY,15,ENEMY_DATA_ARRAY[key],self.round))
+                    elif key in BOSS_DATA_ARRAY:
+                        self.enemyList.append(Boss(startX,startY,30,BOSS_DATA_ARRAY[key],self.round))
+                    else:
+                        print("Invalid Key")
+                    startX += self.enemySpacing
+            startX = center - ((rowLength/2) * self.enemySpacing)
+            startY += self.enemySpacing
     
     def drawEnemies(self,win:pygame.Surface) -> None:
         for enemy in self.enemyList:

@@ -12,7 +12,7 @@ def Can_Be_Hurt_Always(self):
     return True
 
 BOSS_DATA_ARRAY:dict = {
-    "Goliath":{
+    "BGOL":{
         "name":'Goliath',
         "maxHp":lambda round:50 + int(round/ ROUND_MOD),
         "hp":lambda round:45 + int(round / ROUND_MOD),
@@ -31,7 +31,7 @@ BOSS_DATA_ARRAY:dict = {
         "special":goliathSpec,
         "can_be_hurt":Can_Be_Hurt_Always,
     },
-    "Overseer":{
+    "BOVS":{
         "name":'Overseer',
         "maxHp":lambda round:20 + int(round/ ROUND_MOD),
         "hp":lambda round:20 + int(round / ROUND_MOD),
@@ -50,7 +50,7 @@ BOSS_DATA_ARRAY:dict = {
         "special":overseerSpec,
         "can_be_hurt":overseerCanBeHurt,
     },
-    "Rouge":{
+    "BRGE":{
         "name":'Rouge',
         "maxHp":lambda round:15 + int(round/ ROUND_MOD),
         "hp":lambda round:15 + int(round / ROUND_MOD),
@@ -69,7 +69,7 @@ BOSS_DATA_ARRAY:dict = {
         "special":rougeSpec,
         "can_be_hurt":Can_Be_Hurt_Always,
     },
-    "Telefrag":{
+    "BTFG":{
         "name":'Telefrag',
         "maxHp":lambda round:30 + int(round/ ROUND_MOD),
         "hp":lambda round:30 + int(round / ROUND_MOD),

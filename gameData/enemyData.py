@@ -4,7 +4,8 @@ import random as rnd
 ROUND_MOD = 5
 
 ENEMY_DATA_ARRAY:dict = {
-    "Basic_Enemy":{
+    "BE":{
+        "name":"Basic_Enemy",
         "hp":lambda round:3 + int(round / ROUND_MOD),
         "xp":lambda round:15 * (int(round / ROUND_MOD)+1),
         "sprite":{
@@ -18,7 +19,8 @@ ENEMY_DATA_ARRAY:dict = {
         "scoreVal":100,
         "gear":"SingleShot"
     },
-    "Strong_Enemy":{
+    "SE":{
+        "name":"Strong_Enemy",
         "hp":lambda round:6 + int(round / ROUND_MOD),
         "xp":lambda round:30 * (int(round / ROUND_MOD)+1),
         "sprite":{
@@ -32,7 +34,23 @@ ENEMY_DATA_ARRAY:dict = {
         "scoreVal":300,
         "gear":"SingleShot",
     },
-    "Overseer_Minion":{
+    "MM":{
+        "name":'Manic_Minion',
+        "maxHp":lambda round:2 + int(round/ ROUND_MOD),
+        "hp":lambda round:2 + int(round / ROUND_MOD),
+        "xp":lambda round:20 * (int(round / ROUND_MOD)+1),
+        "sprite":{
+            "path":"sprites/ManicMinion.png",
+            "width":30,
+            "height":30
+        },
+        "speed":5,
+        "coinOdds":lambda:True if rnd.randint(1,5) == 1 else False,
+        "fireRate":200,
+        "scoreVal":500,
+        "gear":"MachineGun",
+    },
+    "OM":{
         "name":'Overseer_Minion',
         "maxHp":lambda round:4 + int(round/ ROUND_MOD),
         "hp":lambda round:4 + int(round / ROUND_MOD),
