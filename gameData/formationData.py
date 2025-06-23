@@ -38,12 +38,12 @@ BOSS_FORMATION_DATA = {
     "GoliathForm":{
         "name":"Goliath",
         "formArr":[["BGOL"]],
-        "spacing":120
+        "spacing":0
     },
     "RougeForm":{
         "name":"Rouge",
         "formArr":[["BRGE"]],
-        "spacing":120
+        "spacing":0
     },
     "HiveForm":{
         "name":"Hive Mind",

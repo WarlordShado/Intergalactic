@@ -57,7 +57,7 @@ def machineGun(self, playerPosX:float,playerPosY:float,playerRad:float) -> list:
 
 def machineGunLvl(self,lvl):
     if lvl % 3 == 0:self.dmg += 1
-    if lvl % 5 == 0:self.fireRate -= 5 if self.fireRate >= 75 else 0
+    if lvl % 5 == 0:self.fireRate -= 5 if self.fireRate >= 50 else 0
 
 def sniper(self,playerPosX:float,playerPosY:float,playerRad:float) -> list:
     return [Bullet(playerPosX,playerPosY - playerRad,self.radius,self.velocity,self.bulletSprite,self.pierce)]

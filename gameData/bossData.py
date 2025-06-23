@@ -14,9 +14,9 @@ def Can_Be_Hurt_Always(self):
 BOSS_DATA_ARRAY:dict = {
     "BGOL":{
         "name":'Goliath',
-        "maxHp":lambda round:50 + int(round/ ROUND_MOD),
-        "hp":lambda round:45 + int(round / ROUND_MOD),
-        "xp":lambda round:150 * int(round / ROUND_MOD),
+        "maxHp":lambda round:50 + int((round*4)/ ROUND_MOD),
+        "hp":lambda round:45 + int((round*4)/ ROUND_MOD),
+        "xp":lambda round:100 * int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/Goliath.png",
             "width":60,
@@ -33,8 +33,8 @@ BOSS_DATA_ARRAY:dict = {
     },
     "BOVS":{
         "name":'Overseer',
-        "maxHp":lambda round:20 + int(round/ ROUND_MOD),
-        "hp":lambda round:20 + int(round / ROUND_MOD),
+        "maxHp":lambda round:20 + int((round*3)/ ROUND_MOD),
+        "hp":lambda round:20 + int((round*3) / ROUND_MOD),
         "xp":lambda round:100 * int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/Hive.png",
@@ -52,8 +52,8 @@ BOSS_DATA_ARRAY:dict = {
     },
     "BRGE":{
         "name":'Rouge',
-        "maxHp":lambda round:15 + int(round/ ROUND_MOD),
-        "hp":lambda round:15 + int(round / ROUND_MOD),
+        "maxHp":lambda round:15 + int((round*2)/ ROUND_MOD),
+        "hp":lambda round:15 + int((round*2) / ROUND_MOD),
         "xp":lambda round:100 * int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/Rouge.png",
@@ -71,8 +71,8 @@ BOSS_DATA_ARRAY:dict = {
     },
     "BTFG":{
         "name":'Telefrag',
-        "maxHp":lambda round:30 + int(round/ ROUND_MOD),
-        "hp":lambda round:30 + int(round / ROUND_MOD),
+        "maxHp":lambda round:30 + int((round*3)/ ROUND_MOD),
+        "hp":lambda round:30 + int((round*3) / ROUND_MOD),
         "xp":lambda round:100 * int(round / ROUND_MOD),
         "sprite":{
             "path":"sprites/Telefrag.png",
