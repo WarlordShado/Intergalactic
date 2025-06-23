@@ -3,9 +3,9 @@ from bullet import *
 from gear import *
 from sprite import *
 from enemy import *
+from gameData.gearData import *
 
 class Player():
-    
     def __init__(self,xpos:float,ypos:float,rad:int) -> None:
         self.x = xpos
         self.y = ypos
@@ -15,9 +15,11 @@ class Player():
         self.health = 5
         self.maxHealth = 5
         self.totalBossTokens = 0
-        self.gear = Gear()
-        self.playerSprite = Sprite("sprites\PlayerShip.png",50,50)
-        self.tokens = 0
+        self.gear = Gear(GEAR_DATA["SingleShot"])
+        self.playerSprite = Sprite("sprites/PlayerShip.png",50,50)
+        self.exp = 0
+        self.lvl = 1
+        self.expForLvl = 250
         
     def movePlayer(self,amt:int) -> None:
         if self.x + amt < self.rad:
@@ -26,6 +28,24 @@ class Player():
             self.x -= amt
         else:
             self.x += amt
+
+    def addXP(self,xpAmt):
+        self.exp += xpAmt
+        if self.canLvlUp():
+            self.lvlUp()
+
+    def lvlUp(self):
+        self.exp -= self.expForLvl
+        self.lvl += 1
+        self.expForLvl = (self.lvl * 300)
+        self.maxHealth += 1
+        self.health += 1
+        self.gear.lvlGear(self.lvl)
+
+    def canLvlUp(self):
+        if self.exp >= self.expForLvl:
+            return True
+        return False
             
     def shoot(self,enemy:Enemy = None) -> list: #For Gear, Return a list
         if enemy == None:
@@ -43,10 +63,8 @@ class Player():
         screen.blit(hitboxSurface,(self.x - self.rad,self.y-self.rad))
 
     def upgrade(self):
-        self.tokens += 1
         self.health += 1 if self.tokens % 3 == 0 else 0
         self.maxHealth += 1 if self.tokens % 3 == 0 else 0
-        self.gear.upgrade(self.tokens)
 
     def getRad(self) -> float:
         return self.rad

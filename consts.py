@@ -1,0 +1,3 @@
+BLACK = (0,0,0)
+WIDTH = 600.0
+HEIGHT = 800.0

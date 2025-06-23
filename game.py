@@ -1,13 +1,19 @@
 import math
 import pygame as PyGame
 import pygame.freetype as PyFreeType
-from random import randint
+from random import randint,choice
 from player import Player
 from coin import *
 from bullet import *
 from enemy import *
 from gear import *
 from formation import *
+from gameData.enemyData import *
+from gameData.bossData import *
+from gameData.formationData import *
+from gameData.gearData import *
+
+from consts import *
 
 class Game():
     def __init__(self,screen:PyGame.Surface,center:float,height:float) -> None:
@@ -17,7 +23,7 @@ class Game():
         self.height:float = height
         self.center:float = center
         self.bullets:list = []
-        self.enemies:Formation = Formation(self.center * 2,self.height)
+        self.enemies:Formation = Formation(self.center * 2,self.height,FORMATION_DATA['SquareForm'])
         self.enemiesBullets:list = []
         self.coins:list = []
         self.shootState:bool = True
@@ -29,7 +35,6 @@ class Game():
         self.font = PyFreeType.Font("PixelifySans-VariableFont_wght.ttf",32)
         
         self.isBossRound:bool = False
-        self.BossFormation:BossFormation = None
 
         self.makeEnemies()
 
@@ -39,10 +44,12 @@ class Game():
         
         self.font.render_to(self.win,(350,5),"Multiplier: X" + str(round(self.player.getScoreMultiplyer(),1)),(255,255,255))
         
-        self.font.render_to(self.win,(5,820),"Health: " + str(self.player.health) + "/" + str(self.player.maxHealth),(255,255,255))
-        
+        self.font.render_to(self.win,(5,HEIGHT - 22),"Health: " + str(self.player.health) + "/" + str(self.player.maxHealth),(255,255,255))
+
         if self.isBossRound:
-            self.font.render_to(self.win,(150,47), self.BossFormation.Boss.getName() + " Health: " + str(self.BossFormation.Boss.health) + "/" + str(self.BossFormation.Boss.maxHp),(255,0,0))
+            bossHealth = self.enemies.getBossHealth()
+            self.font.render_to(self.win,(150,47), self.enemies.getBossName() + " Health: " + str(bossHealth[1]) + "/" + str(bossHealth[0]),(255,0,0))
+        
         
     def addScore(self,scoreAmt:int) -> None: #Adds points to the player's score
         self.score += math.floor(scoreAmt * self.player.getScoreMultiplyer())
@@ -68,57 +75,26 @@ class Game():
         self.shootState = state
         
     def makeEnemies(self) -> None: #Filles the enemy array
-        rnd:int = randint(1,2)
-        match rnd:
-            case 1:
-                self.enemies = SquareForm(self.center * 2,self.height,self.round)
-            case 2:
-                self.enemies = DiamondForm(self.center * 2,self.height,self.round)
-
+        formChoose = choice(list(FORMATION_DATA.items()))
+        self.enemies = Formation(self.center * 2,self.height,formChoose[1],self.round)
         self.enemies.createFormation(self.center)
-                
+
     def makeBoss(self) -> None: #Creates the boss object
-        startX:int = self.SCREENCENTER
-        startY:int = 125
-        BossType:Boss = self.getBoss(startX,startY,30)
-        if type(BossType) is Overseer:
-            self.BossFormation = HiveFormation(self.center * 2,self.height,BossType,self.round)
-            self.BossFormation.createFormation(self.center)
-        else:
-            self.BossFormation = BossFormation(self.center * 2,self.height,BossType,self.round)
-            
+        formChoose = choice(list(BOSS_FORMATION_DATA.items()))
+        #formChoose = BOSS_FORMATION_DATA['TelefragForm']
+        self.enemies = Formation(self.center * 2,self.height,formChoose[1],self.round)
+        self.enemies.createFormation(self.center)
         
     def getBoss(self,x,y,rad) -> Boss: #Obtains a random boss
-        rnd:int = randint(1,4)
-        
-        match rnd:
-            case 1:
-                return Overseer(x,y,rad,self.round)
-            case 2:
-                return Goliath(x,y,rad,self.round)
-            case 3:
-                return Rouge(x,y,rad,self.round)
-            case 4: 
-                return Teleporter(x,y,rad,self.win.get_width(),self.round)
+        bossChoose = choice(list(BOSS_DATA_ARRAY.items()))
+        return Boss(x,y,rad,bossChoose[1],self.round)
                 
     def moveEnemies(self) -> None:
-        if not self.isBossRound: 
-            self.enemies.update()
-        else:
-            self.BossFormation.update()
+        self.enemies.update()
                
     def enemyShoot(self) -> None: #Spawns the enemy bullets and activates boss specials
         bulletCheck:list = []
-
-        if not self.isBossRound:
-            bulletCheck = self.enemies.enemyShoot()
-        else:
-            bulletCheck = self.BossFormation.enemyShoot()
-            specCheck:list = self.BossFormation.useSpecial(self.win)
-            
-            for item in specCheck:
-                if type(item) is not None:
-                    self.enemiesBullets.append(item)
+        bulletCheck = self.enemies.enemyShoot()
                 
         for item in bulletCheck:
             if type(item) is not None:
@@ -149,66 +125,37 @@ class Game():
 
     def gearSelect(self) -> None: #Allows the player to select gear
         self.gearSelectNum += 1
-        match self.gearSelectNum:
-            case 1:
-                self.player.gear = Gear()
-            case 2:
-                self.player.gear = DoubleShot()
-            case 3:
-                self.player.gear = TripleShot()
-            case 4:
-                self.player.gear = MachineGun()
-            case 5:
-                self.player.gear = Sniper()
-                self.gearSelectNum = 0 #Resets the match case
+        
+        gearList = list(GEAR_DATA.items())
+        if self.gearSelectNum > len(gearList) - 1:
+            self.gearSelectNum = 0
+        
+        self.player.gear = Gear(gearList[self.gearSelectNum][1])
 
     def moveBullets(self) -> None:
         for bulletIndex,bullet in enumerate(self.bullets): #Iterates through all of the projectiles
             bullet.moveBullet()
-            
-            if not self.isBossRound: #If it isnt a boss round, check if bullets hit the enemies
-                for enemyIndex,target in enumerate(self.enemies.enemyList): #Iterates through all enemies to see if a projectile hit it
-                    if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
-                        if self.enemies.enemyList[enemyIndex].hasCoin and self.enemies.enemyList[enemyIndex].health - 1 <= 0:
-                            rndUpgrade = randint(1,3)
-                            if rndUpgrade == 3:
-                                self.coins.append(UpgradeToken(200,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
+        
+            for enemyIndex,target in enumerate(self.enemies.enemyList): #Iterates through all enemies to see if a projectile hit it
+                if self.checkCollisonCircle([target.getX(),target.getY()],[bullet.getX(),bullet.getY()],target.getRad(),bullet.getRad()):
+                    try:
+                        enemyCheck = self.enemies.enemyList[enemyIndex]
+                        enemyCheck.health -= self.player.gear.dmg if type(enemyCheck) is not Boss or enemyCheck.canBeHurt() else 0
+                        if enemyCheck.health <= 0:
+                            self.addScore(enemyCheck.scoreVal)
+                            self.player.addXP(enemyCheck.xp)
+                            if type(enemyCheck) is Boss:
+                                self.coins.append(BossToken(500,enemyCheck.getX(),enemyCheck.getY(),15))
+                            elif enemyCheck.hasCoin:
+                                self.coins.append(Coin(100,enemyCheck.getX(),enemyCheck.getY(),5))
+                            del self.enemies.enemyList[enemyIndex] #Deletes the Enemy
+                        if len(self.bullets) != 0: #bullet list is sometimes zero and breaks so this prevents it
+                            if bullet.pierce <= 0 or bullet.getY() <= 0:
+                                del self.bullets[bulletIndex] #Deletes the Bullet
                             else:
-                                self.coins.append(Coin(100,self.enemies.enemyList[enemyIndex].getX(),self.enemies.enemyList[enemyIndex].getY(),5))
-
-                            
-                        try:
-                            self.enemies.enemyList[enemyIndex].health -= 1
-                            if self.enemies.enemyList[enemyIndex].health <= 0:
-                                self.addScore(self.enemies.enemyList[enemyIndex].scoreVal)
-
-                                del self.enemies.enemyList[enemyIndex] #Deletes the Enemy
-                            if len(self.bullets) != 0: #bullet list is sometimes zero and breaks so this prevents it
-                                if bullet.pierce <= 0 or bullet.getY() <= 0:
-                                    del self.bullets[bulletIndex] #Deletes the Bullet
-                                else:
-                                    bullet.pierce -= 1
-                        
-                        except IndexError as ex: #This Shouldn't Fire, Hopefully
-                            print(ex)
-            else:
-                if self.BossFormation.Boss.canBeHurt(): #Boss can't be hurt untile all minions are gone
-
-                    if self.checkCollisonCircle([self.BossFormation.Boss.getX(),self.BossFormation.Boss.getY()],[bullet.getX(),bullet.getY()],self.BossFormation.Boss.getRad(),bullet.getRad()):
-                        self.BossFormation.Boss.health -= self.player.gear.dmg
-
-                        if self.BossFormation.Boss.health <= 0: #Means the boss died
-                            self.killBoss()
-                        del self.bullets[bulletIndex] #Deletes the Bullet if it collided with something
-                elif type(self.BossFormation.Boss) is Overseer:
-                    for index,item in enumerate(self.BossFormation.Boss.minionList): #If it is a boss round, the boss minions need to be checked
-                        if self.checkCollisonCircle([item.getX(),item.getY()],[bullet.getX(),bullet.getY()],item.getRad(),bullet.getRad()):
-                            item.health -= 1
-                            if item.health <= 0:
-                                del self.BossFormation.Boss.minionList[index]
-                                self.addScore(300)
-                            del self.bullets[bulletIndex]
-
+                                bullet.pierce -= 1
+                    except IndexError as ex: #This Shouldn't Fire, Hopefully
+                        print(ex)
             if bullet.getY() <= 0:
                 del self.bullets[bulletIndex] #Removes a bullet if it gets off screen
             else:
@@ -216,9 +163,6 @@ class Game():
 
     def killBoss(self):
         self.addScore(1500)
-        self.coins.append(BossToken(500,self.BossFormation.Boss.getX(),self.BossFormation.Boss.getY(),15)) #Adds a boss token to the coin list
-        self.player.upgrade()
-        self.BossFormation.Boss = None 
         self.isBossRound = False
 
     def moveEnemyBullets(self) -> None: #Moves the enemy projectiles and cheks if they collided with the player
@@ -245,12 +189,9 @@ class Game():
         if len(self.coins) > 0:
             for coinIndex, coin in enumerate(self.coins):
                 coin.moveCoin()
-            
                 if self.checkCollisonCircle([self.player.getX(),self.player.getY()],[coin.getX(),coin.getY()],self.player.getRad(),coin.getRad()):
                     if type(coin) is BossToken:
                         self.player.totalBossTokens += 1
-                    elif type(coin) is UpgradeToken:
-                        self.player.upgrade()
 
                     self.addScore(coin.getVal())
                     del self.coins[coinIndex]
@@ -258,7 +199,7 @@ class Game():
                 coin.drawCoin(self.win)
             
     def needMoreEnemy(self) -> bool: #checks if all of the enemies are gone
-        if len(self.enemies.enemyList) == 0 or self.isBossRound and self.BossFormation == None:
+        if len(self.enemies.enemyList) == 0:
             return True
         return False
 
@@ -274,15 +215,13 @@ class Game():
             self.player.health += 1
             
         self.round += 1
+        self.isBossRound = False
             
         if self.round % 5 == 0:
             self.isBossRound = True
             self.makeBoss()
         else:
-            self.makeEnemies()
-                
-    def updateBoss(self) -> None: #Changes the boss's color and draws it. if it summons stuff, it will draw that too
-        self.BossFormation.drawEnemies(self.win)      
+            self.makeEnemies()     
 
     def draw(self) -> None:
         self.update()
@@ -290,8 +229,6 @@ class Game():
         if not self.gameOver:
             if self.needMoreEnemy(): #Checks if more enemies need to be put on screen
                 self.incRound()
-            if self.isBossRound: #Draws the boss if it is a boss round
-                self.updateBoss()
             else: #Draws all of the Enemies
                  self.enemies.drawEnemies(self.win)
 

@@ -1,0 +1,69 @@
+FORMATION_DATA = {
+    "SquareForm":{
+        "name":"SquareForm",
+        "formArr":[
+            ["BE","BE","BE","BE","BE"],
+            ["BE","BE","BE","BE","BE"],
+            ["BE","BE","BE","BE","BE"],
+            ["BE","BE","BE","BE","BE"],
+            ["BE","BE","BE","BE","BE"]
+        ],
+        "spacing":50
+    },
+    "DiamondForm":{
+        "name":"DiamondForm",
+        "formArr":[
+            ["X","X","BE","X","X"],
+            ["X","BE","SE","BE","X"],
+            ["BE","SE","BE","SE","BE"],
+            ["X","BE","SE","BE","X"],
+            ["X","X","BE","X","X"],
+        ],
+        "spacing":35
+    },
+    "ManicDiamondForm":{
+        "name":"ManicDiamond",
+        "formArr":[
+            ["X","X","MM","X","X"],
+            ["X","BE","BE","BE","X"],
+            ["MM","BE","SE","BE","MM"],
+            ["X","BE","BE","BE","X"],
+            ["X","X","MM","X","X"],
+        ],
+        "spacing":35
+    }
+}
+
+BOSS_FORMATION_DATA = {
+    "GoliathForm":{
+        "name":"Goliath",
+        "formArr":[["BGOL"]],
+        "spacing":120
+    },
+    "RougeForm":{
+        "name":"Rouge",
+        "formArr":[["BRGE"]],
+        "spacing":120
+    },
+    "HiveForm":{
+        "name":"Hive Mind",
+        "formArr":[
+            ["OM","X","BOVS","X","OM"],
+            ["OM","X","X","X","OM"],
+            ["X","OM","X","OM","X"],
+            ["X","X","OM","X","X"],
+        ],
+        "spacing":50
+    },
+    "TelefragForm":{
+        "name":"Telefrag",
+        "formArr":[
+            ["SE","X","X","X","SE"],
+            ["SE","X","X","X","SE"],
+            ["SE","X","BTFG","X","SE"],
+            ["SE","X","X","X","SE"],
+            ["SE","X","X","X","SE"],
+        ],
+        "spacing":50
+    }
+}
