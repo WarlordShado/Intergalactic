@@ -8,7 +8,7 @@ from gameData.bossData import BOSS_DATA_ARRAY
 from gameData.formationData import *
 from Globals import *
 
-class Formation(): #Template
+class Formation(): 
     def __init__(self,screenWidth:float,screenHeight:float,formationData:dict,round:int = 1) -> None:
         self.screenWidth:float = screenWidth
         self.screenHeight:float = screenHeight
@@ -25,7 +25,7 @@ class Formation(): #Template
         startX = center - ((rowLength/2) * self.enemySpacing)
         startY = 120
 
-        for row in self.formArr:
+        for row in self.formArr: #Creates enemy formation form stored 2d array in the supplied enemy list
             for key in row:
                 if key == "X":
                     startX += self.enemySpacing
@@ -54,7 +54,7 @@ class Formation(): #Template
                 bulletCheck = enemy.shoot()
                 for item in bulletCheck:
                     bulletList.append(item)
-            if type(enemy) is Boss:
+            if type(enemy) is Boss: #Bosses have extra functions thhat run like the special 
                 rndSpec = randint(0,enemy.specRate)
                 if rndSpec == 10:
                     bulletCheck = enemy.special()

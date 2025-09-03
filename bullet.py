@@ -10,7 +10,7 @@ class Bullet():
         self.bulletColor : tuple = (0,0,0)
         self.bulletImage = Sprite(bullet_sprite[0],bullet_sprite[1],bullet_sprite[2])
                 
-        if rad > 10:
+        if rad > 10: #Only used if bullet doesnt already have a sprite
             self.bulletColor = (255,0,0)
         
     def moveBullet(self) -> None:

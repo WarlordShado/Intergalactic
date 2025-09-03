@@ -24,11 +24,17 @@ class Sprite():
 
     def updateAnimation(self):
         self.framerateTimer += 1
-        if self.framerateTimer >= 6:
+        if self.framerateTimer >= 6: #6 comes out to about 10 animation frames a second for all
             self.framerateTimer = 0
             self.imageSurface.blit(self.frames[self.currentFrame],(0,0))
             self.currentFrame += 1
             if self.currentFrame > len(self.frames) - 1:
                 self.currentFrame = 0
+                
+                
+#Turn Frames into 2d array
+#Increase column by one when the class calls to
+#set extra timer to run so the class knows when to go back to the original sprite
+            
             
                 
