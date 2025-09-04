@@ -31,6 +31,17 @@ FORMATION_DATA = {
             ["X","X","MM","X","X"],
         ],
         "spacing":35
+    },
+    "CircleForm":{
+        "name":"Circle",
+        "formArr":[
+            ["X","BE","BE","BE","X"],
+            ["BE","X","SE","X","BE"],
+            ["BE","SE","X","SE","BE"],
+            ["BE","X","SE","X","BE"],
+            ["X","BE","BE","BE","X"],
+        ],
+        "spacing":35
     }
 }
 
